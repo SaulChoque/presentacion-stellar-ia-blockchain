@@ -1,0 +1,45 @@
+{
+  "errors": [],
+  "results": [
+    {
+      "slide": 13,
+      "layout": "pass",
+      "transition": "pass"
+    },
+    {
+      "slide": 14,
+      "layout": "pass",
+      "transition": "pass"
+    },
+    {
+      "slide": 15,
+      "layout": "pass",
+      "transition": "pass"
+    },
+    {
+      "slide": 16,
+      "layout": "pass",
+      "transition": "pass"
+    },
+    {
+      "slide": 17,
+      "layout": "pass",
+      "transition": "pass"
+    },
+    {
+      "slide": 18,
+      "layout": "pass",
+      "transition": "pass"
+    }
+  ],
+  "checks": [
+    "puppet pixel movement",
+    "rapid navigation",
+    "presenter sync",
+    "clock pause",
+    "automatic advance",
+    "reduced motion pixel stability",
+    "16:9 at four sizes",
+    "local fonts"
+  ]
+}
