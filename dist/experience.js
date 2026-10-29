@@ -63,20 +63,38 @@ else if(index===14){doll(cast,-100,-30,.9);web(cast,120,50);soft(cast,75,68,'yel
 else{familiar(cast,0,0,1.2);pumpkin(cast,-170,-170,.65)}
 if(!reduced.matches)entranceMotion.push(animate(cast.rotation,{y:[-.18,0],duration:950,ease:'out(3)'}))}
 
-// Entirely new transition: actual subdivided paper meshes folding and tearing in 3D.
+// Paper transitions: each slide enters with its own torn / crumpled / rolled / shredded sheet (see wipes).
 const curtainScene=new THREE.Scene();const curtainCamera=new THREE.OrthographicCamera(-800,800,450,-450,1,2000);curtainCamera.position.z=1200;curtainScene.add(new THREE.AmbientLight(0xffffff,2.6));const paperLight=new THREE.DirectionalLight(0xffffff,2.5);paperLight.position.set(-500,600,1000);curtainScene.add(paperLight);
-const paperMaterials=[new THREE.MeshStandardMaterial({color:palette.purple,roughness:1,map:texture,side:THREE.DoubleSide}),new THREE.MeshStandardMaterial({color:palette.paper,roughness:1,map:texture,side:THREE.DoubleSide})];
-const sheets=[];for(let side=0;side<2;side++){const geo=new THREE.PlaneGeometry(810,930,30,30);const pos=geo.attributes.position;for(let i=0;i<pos.count;i++){const x=pos.getX(i),y=pos.getY(i);const inner=side===0?x>390:x< -390;if(inner)pos.setX(i,x+Math.sin(y*.13)*9+Math.sin(y*.39)*4)}const base=new Float32Array(pos.array);const mesh=new THREE.Mesh(geo,paperMaterials[side]);curtainScene.add(mesh);sheets.push({mesh,geo,base,side})}
-const tearState={progress:1};let transitionActive=false;
-function drawCurtain(){const p=tearState.progress;for(const {mesh,geo,base,side} of sheets){const sign=side===0?-1:1;mesh.position.set(sign*(395+p*1200),sign*p*110,0);mesh.rotation.set(sign*p*.27,sign*p*.7,sign*p*.12);const position=geo.attributes.position;for(let i=0;i<position.count;i++){const x=base[i*3],y=base[i*3+1];position.setXYZ(i,x*(1-p*.18),y,Math.sin(x*.025+y*.013)*p*90+Math.sin(y*.045)*p*30)}position.needsUpdate=true;geo.computeVertexNormals()}curtainRenderer.render(curtainScene,curtainCamera)}
-function transition(){halt(curtainMotion);if(reduced.matches){transitionActive=false;curtainHost.hidden=true;return}curtainHost.hidden=false;transitionActive=true;tearState.progress=0;drawCurtain();curtainMotion.push(animate(tearState,{progress:1,duration:1000,ease:'inOut(3)',onComplete:()=>{transitionActive=false;curtainHost.hidden=true;curtainRenderer.clear()}}))}
+const paperMats={};const pmat=(c,flat=false)=>paperMats[c+flat]??=new THREE.MeshStandardMaterial({color:palette[c],roughness:1,map:texture,side:THREE.DoubleSide,flatShading:flat});
+const curtain=new THREE.Group();curtainScene.add(curtain);
+const ease=t=>t*t*(3-2*t),clamp01=t=>Math.min(1,Math.max(0,t)),rip=y=>Math.sin(y*.13)*9+Math.sin(y*.39)*4;
+const builders={
+tear(c){const parts=[];for(let l=0;l<(c.layers||1);l++)for(const s of[-1,1]){const geo=new THREE.PlaneGeometry(1000,2000,24,40);geo.translate(s*500,0,0);const pos=geo.attributes.position;for(let i=0;i<pos.count;i++)if(Math.abs(pos.getX(i))<1)pos.setX(i,rip(pos.getY(i)+l*70));const m=new THREE.Mesh(geo,pmat(c.colors[(l*2+(s>0))%c.colors.length]));m.position.z=-l*4;curtain.add(m);parts.push({m,s,l,pos,base:new Float32Array(pos.array)})}
+return p=>{for(const {m,s,l,pos,base} of parts){const q=ease(clamp01((p-l*.12)/(1-l*.12)));m.position.x=s*q*1300;m.position.y=s*q*110;m.rotation.set(s*q*.27,s*q*.7,s*q*.12);for(let i=0;i<pos.count;i++){const x=base[i*3],y=base[i*3+1];pos.setXYZ(i,x,y,Math.sin(x*.025+y*.013)*q*90+Math.sin(y*.045)*q*30)}pos.needsUpdate=true;m.geometry.computeVertexNormals()}}},
+crumple(c){const geo=new THREE.PlaneGeometry(1700,1000,34,20),m=new THREE.Mesh(geo,pmat(c.colors[0],true));curtain.add(m);const a=(c.fall||0)*Math.PI/180;
+const pos=geo.attributes.position,base=new Float32Array(pos.array);
+return p=>{const k=ease(clamp01(p/.65)),s=1-.88*k;for(let i=0;i<pos.count;i++){const x=base[i*3],y=base[i*3+1],n=Math.sin(x*.031+c.seed)*Math.sin(y*.047+c.seed*2)+.5*Math.sin(x*.083+y*.071);pos.setXYZ(i,x*s+n*35*k,y*s+Math.cos(x*.05+y*.04)*30*k,n*110*k+Math.sin(x*.2+y*.17)*20*k)}pos.needsUpdate=true;geo.computeVertexNormals();const g=ease(clamp01((p-.55)/.45));m.position.set(Math.cos(a)*g*1500,Math.sin(a)*g*1500,0);m.rotation.z=g*5}},
+curl(c){const R=90,geo=new THREE.PlaneGeometry(2200,2200,150,2),m=new THREE.Mesh(geo,pmat(c.colors[0]));curtain.add(m);const pos=geo.attributes.position,base=new Float32Array(pos.array);
+return p=>{const edge=-1100+p*(2200+2*R+10);for(let i=0;i<pos.count;i++){const u=base[i*3],y=base[i*3+1];if(u<edge){const th=(edge-u)/R;pos.setXYZ(i,edge-R*Math.sin(th),y,R*(1-Math.cos(th))+th*1.5)}else pos.setXYZ(i,u,y,0)}pos.needsUpdate=true;geo.computeVertexNormals()}},
+shred(c){const N=20,strips=[];for(let i=0;i<N;i++){const m=new THREE.Mesh(new THREE.PlaneGeometry(101,1900,1,8),pmat(c.colors[i%c.colors.length]));m.position.x=(i-(N-1)/2)*95;curtain.add(m);strips.push({m,d:(i*7%N)/N,dir:c.alt&&i%2?1:-1,i})}
+return p=>{for(const {m,d,dir,i} of strips){const q=ease(clamp01((p-d*.4)/.6));m.position.y=dir*q*1900;m.rotation.set(q*1.4*dir,0,q*.4*((i%3)-1))}}}};
+const wipes=[
+{type:'tear',colors:['purple','paper']},{type:'crumple',colors:['paper'],seed:1,fall:-90},{type:'curl',colors:['purple']},{type:'shred',colors:['yellow','paper']},
+{type:'tear',angle:90,colors:['teal','paper']},{type:'crumple',colors:['purple'],seed:3,fall:180},{type:'curl',angle:180,colors:['paper']},{type:'shred',angle:90,colors:['purple','paper']},
+{type:'tear',angle:35,colors:['yellow','paper']},{type:'crumple',colors:['yellow'],seed:5,fall:45},{type:'curl',angle:90,colors:['teal']},{type:'shred',alt:true,colors:['teal','purple']},
+{type:'tear',angle:-35,layers:2,colors:['paper','purple','yellow','teal']},{type:'crumple',colors:['teal'],seed:8,fall:-135},{type:'curl',angle:45,colors:['yellow']},{type:'shred',angle:135,alt:true,colors:['paper','yellow']},
+{type:'tear',angle:90,layers:2,colors:['purple','yellow','paper','teal']},{type:'curl',angle:-90,colors:['paper']}];
+let current=null;const tearState={progress:1};let transitionActive=false;
+function clearCurtain(){current=null;curtain.traverse(o=>o.geometry?.dispose());curtain.clear();curtain.rotation.set(0,0,0)}
+function drawCurtain(){current?.(tearState.progress);curtainRenderer.render(curtainScene,curtainCamera)}
+function transition(i=0){halt(curtainMotion);clearCurtain();if(reduced.matches){transitionActive=false;curtainHost.hidden=true;return}const c=wipes[i%wipes.length];current=builders[c.type](c);curtain.rotation.z=(c.angle||0)*Math.PI/180;curtainHost.hidden=false;transitionActive=true;tearState.progress=0;drawCurtain();curtainMotion.push(animate(tearState,{progress:1,duration:c.type==='crumple'?1300:1000,ease:c.type==='crumple'?'linear':'inOut(3)',onComplete:()=>{transitionActive=false;curtainHost.hidden=true;clearCurtain();curtainRenderer.clear()}}))}
 function render(t=0){frame=requestAnimationFrame(render);if(document.hidden||t-lastFrame<33)return;lastFrame=t;if(!reduced.matches)renderer.render(scene,camera);if(transitionActive)drawCurtain()}
 scenery.traverse(o=>{if(o.isMesh)o.receiveShadow=false});
 const index=Number(document.body.dataset.slide)||0;rebuild(index,document.body.dataset.kind);renderer.render(scene,camera);render();document.body.dataset.graphics='three-ready';
-window.addEventListener('slidechange',e=>{transition();rebuild(e.detail.index,e.detail.kind);textEntrance();renderer.render(scene,camera)});
+window.addEventListener('slidechange',e=>{transition(e.detail.index);rebuild(e.detail.index,e.detail.kind);textEntrance();renderer.render(scene,camera)});
 reduced.addEventListener('change',()=>{halt(textMotion);halt(curtainMotion);transitionActive=false;curtainHost.hidden=true;rebuild(Number(document.body.dataset.slide)||0,document.body.dataset.kind);textEntrance();renderer.render(scene,camera)});
 renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();cancelAnimationFrame(frame);halt(puppetMotion);curtainHost.hidden=true;document.body.dataset.graphics='context-lost'});
-window.addEventListener('pagehide',()=>{cancelAnimationFrame(frame);[textMotion,puppetMotion,entranceMotion,curtainMotion].forEach(halt);renderer.dispose();curtainRenderer.dispose();geometrySet.forEach(g=>g.dispose());sheets.forEach(s=>s.geo.dispose());Object.values(mats).forEach(m=>m.dispose());paperMaterials.forEach(m=>m.dispose());texture.dispose()});
+window.addEventListener('pagehide',()=>{cancelAnimationFrame(frame);[textMotion,puppetMotion,entranceMotion,curtainMotion].forEach(halt);renderer.dispose();curtainRenderer.dispose();geometrySet.forEach(g=>g.dispose());clearCurtain();Object.values(mats).forEach(m=>m.dispose());Object.values(paperMats).forEach(m=>m.dispose());texture.dispose()});
 }else window.addEventListener('slidechange',textEntrance);
 textEntrance();
 }

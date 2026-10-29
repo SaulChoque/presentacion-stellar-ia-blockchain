@@ -16,6 +16,7 @@ class Handler(SimpleHTTPRequestHandler):
  def __init__(self,*a,**kw):super().__init__(*a,directory='dist',**kw)
  def response(self,status,data):
   body=json.dumps(data).encode();self.send_response(status);self.send_header('Content-Type','application/json');self.send_header('Cache-Control','no-store');self.send_header('Content-Length',str(len(body)));self.end_headers();self.wfile.write(body)
+ def end_headers(self):self.send_header('Cache-Control','no-cache');super().end_headers()
  def do_GET(self):
   if self.path=='/api/state':
    with lock:update();self.response(200,state.copy())
