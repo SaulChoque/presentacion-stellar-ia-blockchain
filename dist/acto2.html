@@ -46,7 +46,196 @@
 #notePanel{position:fixed;z-index:66;top:20px;right:20px;width:min(430px,95vw);max-height:calc(100vh - 115px);overflow-y:auto;background:#111115f5;color:#eee8dd;border:1px solid #746d77;box-shadow:0 15px 80px #000c;border-radius:17px;padding:25px 25px 28px;display:none}#notePanel.open{display:block}#notePanel h3{color:var(--yellow);font-size:20px;margin:0 0 12px}#notePanel p{line-height:1.65;font-size:15px;white-space:pre-line}#notePanel .keys{font-size:12px;color:#c9bff5;border-top:1px solid #555;padding-top:15px}#noteClose{float:right;padding:5px 10px;border:0;background:#48454e;border-radius:6px;color:white}
 #toast{position:fixed;z-index:68;top:20px;left:50%;transform:translateX(-50%);background:#ffe025;color:#101010;font-weight:800;border-radius:10px;padding:12px 20px;opacity:0;pointer-events:none;transition:opacity .25s}#toast.visible{opacity:1}
 @media(max-width:770px){#controls{bottom:4px;padding:5px;gap:4px}#controls button{font-size:12px;padding:8px 10px;min-height:35px}.counter{min-width:50px}}
-html,body{background:#131313}#controls,#notePanel,.number{display:none!important}</style>
+html,body{background:#131313}#controls,#notePanel,.number{display:none!important}
+.node .mini{gap:4px}.node .mini i{width:24px;height:11px}
+.node .mini i.new{opacity:0;background:#ffe02540;outline:2px dashed #e0b800;outline-offset:-2px;transform:scale(.4);transition:opacity .5s,transform .5s,background .6s,outline-color .6s}
+.proposed .node.n1 .mini i.new{opacity:1;transform:none}
+.proposed .node:not(.n1) .mini i.new{opacity:1;transform:none;transition-delay:1.3s}
+.settled .node .mini i.new{transition-delay:0s}
+.committed .node .mini i.new{background:#6a598c;outline-color:transparent;animation:blockpop .7s ease-out}
+@keyframes blockpop{40%{transform:scale(1.5);box-shadow:0 0 14px #ffe025}}
+.node .badge{position:absolute;top:-13px;right:-13px;width:34px;height:34px;border-radius:50%;background:#96f1bb;color:#0c3b25;font-size:19px;line-height:34px;font-weight:900;transform:scale(0);transition:transform .35s cubic-bezier(.3,1.6,.5,1);box-shadow:0 4px 0 #0005}
+.node.voted .badge{transform:scale(1)}
+.proposed .net-lines line{stroke:#ffe025;stroke-width:4;stroke-dasharray:9 9}
+.committed .net-lines line{stroke:var(--cyan);stroke-width:5;stroke-dasharray:none}
+.proposed .node.n1{box-shadow:0 0 0 5px #ffe02566,0 12px 0 #0005}
+.committed .node{background:#d3fff0}
+.pk{position:absolute;left:363px;top:43px;width:30px;height:30px;border-radius:50%;background:#ffe025;box-shadow:0 0 22px #ffe025;opacity:0;pointer-events:none;z-index:5}
+.proposed:not(.settled) .pk{animation:fly 1.6s ease-in-out .2s both}
+@keyframes fly{0%{opacity:1;transform:translate(0,0) scale(.6)}85%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1)}}
+.quorum{position:absolute;z-index:4;left:340px;top:648px;width:760px;display:flex;align-items:center;justify-content:center;gap:18px;font-size:16px;font-weight:800;color:#ece9e1}
+.quorum .pips i{display:inline-block;width:20px;height:20px;border-radius:50%;background:#3a3640;margin:0 3px;transition:background .35s,transform .35s}
+.quorum .pips i.on{background:var(--good);transform:scale(1.15)}
+
+.anatomy-stage{left:140px;top:246px;width:720px}
+.grimoire{background:#e8e4d7;color:#141414;border-radius:30px 12px 34px 10px;padding:20px 26px 14px;box-shadow:12px 14px 0 #0007;transform:rotate(-.5deg)}
+.gtitle{font:900 12px Inter,Arial;letter-spacing:2.2px;border-bottom:1px dashed #0006;padding-bottom:12px;margin-bottom:10px}
+.grimoire pre{margin:0;font:600 21px/1.3 Consolas,"IBM Plex Mono",ui-monospace,monospace}
+.gl{display:block;white-space:pre;padding:0 10px;border-radius:7px;border:2px solid transparent;transition:background .45s,border-color .45s,box-shadow .45s}
+.gl b{display:inline-block;width:44px;color:#0007;font-weight:700;font-size:15px}
+.gline{cursor:pointer}.gline:hover{background:#0000000d}
+.gline.highlight{background:#fff0a6;border-color:var(--yellow);box-shadow:0 0 22px #ffdf2570}
+.slide.active .gl{animation:lineIn .6s ease both;animation-delay:calc(var(--i)*110ms + .3s)}
+@keyframes lineIn{from{opacity:0;transform:translateX(-14px)}}
+.gnote{display:block;margin-top:10px;font:600 13px Inter,Arial;color:#0009}
+
+.tx-scene,.sig-scene{position:absolute;z-index:4;left:110px;top:262px;width:1241px;height:470px}
+.txhead{font:900 21px Inter,Arial;margin-bottom:14px}
+.txcard,.hdrcard,.sigblock{position:absolute;top:0;background:#e8e4d7;color:#16131b;border-radius:32px 32px 14px 14px;padding:26px 28px;box-shadow:12px 14px 0 #0007}
+.hdrcard,.sigblock{background:#c6b3f0}
+.txcard{left:0;width:500px}.hdrcard{right:0;width:480px}
+.txrow{font:700 18px Consolas,monospace;background:#fff8;border-radius:9px;padding:8px 14px;margin:7px 0}
+.hrow{display:flex;justify-content:space-between;gap:12px;font:700 19px Consolas,monospace;background:#f4ecff8a;border-radius:9px;padding:12px 14px;margin:9px 0;border:2px solid transparent;transition:background .5s,border-color .5s,box-shadow .5s}
+.hrow small{font:inherit;opacity:.8}
+.txflow{position:absolute;left:530px;top:130px;width:190px;height:40px;display:flex;align-items:center;gap:10px;opacity:0;transition:opacity .7s}
+.txflow b{margin-left:4px;font:900 20px Inter,Arial;color:var(--yellow);letter-spacing:1px}
+.txflow i{width:16px;height:16px;border-radius:50%;background:var(--yellow);box-shadow:0 0 14px var(--yellow);animation:flowdot 1.4s ease-in-out infinite}
+.txflow i:nth-child(2){animation-delay:.25s}.txflow i:nth-child(3){animation-delay:.5s}
+@keyframes flowdot{0%,100%{opacity:.25;transform:translateX(-6px)}50%{opacity:1;transform:translateX(8px)}}
+.rv1{display:none}
+.slide[data-beat="2"] .txflow{opacity:1}
+.slide[data-beat="2"] .rv0{display:none}.slide[data-beat="2"] .rv1{display:inline}
+.slide[data-beat="2"] .hrow.root{background:#fff4c8;border-color:var(--yellow);box-shadow:0 0 28px #ffe02580}
+.cap{display:none;position:absolute;left:170px;right:170px;top:392px;margin:0;text-align:center;font-size:23px;line-height:1.45;color:#efede8;animation:capIn .6s ease both}
+.cap b{color:var(--yellow)}
+@keyframes capIn{from{opacity:0;transform:translateY(10px)}}
+.slide[data-beat="0"] .cap.c0,.slide[data-beat="1"] .cap.c1,.slide[data-beat="2"] .cap.c2{display:block}
+.sig-scene .cap{top:372px}.tx-scene .cap{left:30px;right:30px;top:372px;font-size:22px}
+.signer{position:absolute;left:0;top:70px;width:230px;padding:26px 18px;border-radius:30px 30px 12px 12px;background:#ffe025;color:#16131b;text-align:center;box-shadow:10px 12px 0 #0007}
+.signer b{display:block;font:900 22px Inter,Arial}.signer small{font:700 15px Inter,Arial}
+.skey{font-size:52px;transition:transform .6s}.slide:not([data-beat="0"]) .skey{transform:rotate(-18deg) scale(1.15)}
+.sigarrow{position:absolute;left:250px;top:118px;width:200px;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;transition:opacity .6s}
+.sigarrow span{font:900 17px Inter,Arial;color:var(--yellow);letter-spacing:2px}
+.sigarrow i{display:block;width:100%;height:6px;background:var(--yellow);position:relative;box-shadow:0 0 16px #ffdb0070}
+.sigarrow i:after{content:"";position:absolute;right:-6px;top:-8px;border-left:18px solid var(--yellow);border-top:11px solid transparent;border-bottom:11px solid transparent}
+.slide:not([data-beat="0"]) .sigarrow{opacity:1}
+.sigblock{left:470px;width:430px}
+.sv1{display:none}.slide:not([data-beat="0"]) .sv0{display:none}.slide:not([data-beat="0"]) .sv1{display:inline}
+.slide:not([data-beat="0"]) .sigrow{background:#fff4c8;border-color:var(--yellow);box-shadow:0 0 24px #ffe02570}
+.sig-scene.broken .ts{color:#b5202f}.sig-scene.broken .sigrow{background:#ffd1d1;border-color:#fd656a;box-shadow:0 0 24px #fd656a70}
+.verifiers{position:absolute;right:0;top:20px;width:260px;display:flex;flex-direction:column;gap:20px}
+.vnode{position:relative;background:#d9d0ef;color:#17151d;border-radius:20px 20px 10px 10px;padding:20px;font:900 18px Inter,Arial;text-align:center;box-shadow:0 8px 0 #0005;opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s}
+.slide[data-beat="2"] .vnode{opacity:1;transform:none;transition-delay:calc(var(--i)*.45s)}
+.vk{position:absolute;top:-12px;right:-12px;width:34px;height:34px;border-radius:50%;background:#96f1bb;color:#0c3b25;font:900 19px/34px Inter,Arial;font-style:normal;transform:scale(0);transition:transform .4s cubic-bezier(.3,1.6,.5,1)}
+.vk:before{content:"✓"}
+.slide[data-beat="2"] .vk{transform:scale(1);transition-delay:calc(var(--i)*.45s + .4s)}
+.sig-scene.broken .vk{background:#ff9ea7;color:#5a0d17}.sig-scene.broken .vk:before{content:"✗"}
+.sig-scene.broken .vnode{background:#f3c9ce}
+.vlabel{text-align:center;font-size:14px;color:#b9b6b4;opacity:0;transition:opacity .6s .8s}.slide[data-beat="2"] .vlabel{opacity:1}
+.sig-scene .cap.c3{display:none}
+.sig-scene.broken .cap{display:none!important}.sig-scene.broken .cap.c3{display:block!important}
+
+.sc{position:absolute;z-index:4;left:110px;top:262px;width:1241px;height:470px}
+.sc .cap{left:60px;right:60px;top:372px;font-size:22px}
+.qsvg{position:absolute;left:0;top:0;width:1241px;height:400px;z-index:1;pointer-events:none}
+.ql{stroke:var(--yellow);stroke-width:5;stroke-linecap:round;stroke-dasharray:640;stroke-dashoffset:640;transition:stroke-dashoffset 1s ease}
+.slide:not([data-beat="0"]) .ql{stroke-dashoffset:0}
+.qn{position:absolute;z-index:2;width:140px;height:80px;background:#d9d0ef;color:#17151d;border-radius:22px 22px 10px 10px;text-align:center;padding-top:20px;font:900 18px Inter,Arial;box-shadow:0 8px 0 #0005;transition:background .5s,box-shadow .5s,transform .5s,outline-color .5s}
+.qn small{display:block;font:700 12px Inter,Arial;opacity:.7;margin-top:2px}
+.qn.sl,.qn.me{outline:3px dashed transparent;outline-offset:7px}
+.slide:not([data-beat="0"]) .qn.sl{outline-color:var(--yellow)}
+.slide:not([data-beat="0"]) .qn.me{box-shadow:0 0 0 5px #ffe02566,0 8px 0 #0005}
+.slide[data-beat="2"] .qn.me{background:#d3fff0}
+.qtag{position:absolute;z-index:3;padding:7px 14px;border-radius:999px;background:#161616;border:1px solid #746525;color:var(--yellow);font:800 15px Inter,Arial;opacity:0;transition:opacity .6s}
+.slide:not([data-beat="0"]) .qtag{opacity:1}
+.qring{position:absolute;top:20px;width:660px;height:330px;border:4px dashed;border-radius:50%;display:flex;align-items:flex-start;justify-content:center;transition:background .6s}
+.qring b{margin-top:12px;font:900 16px Inter,Arial;letter-spacing:2px;color:#ece9e1}
+.qring.r1{left:60px;border-color:#bfaef2;background:#bfaef214}.qring.r2{left:520px;border-color:#24ced6;background:#24ced614}
+.qn.mid{transition:all .6s}.slide:not([data-beat="0"]) .qn.mid{background:var(--yellow);transform:scale(1.12);box-shadow:0 0 0 6px #ffe02580,0 8px 0 #0005}
+.slide[data-beat="2"] .qring{background:#ffe0251a}
+.phases{position:absolute;left:0;right:0;top:10px;display:flex;align-items:center;justify-content:center;gap:16px}
+.ph{width:340px;height:230px;border-radius:40px 40px 14px 14px;background:#e8e4d7;color:#16131b;padding:26px 24px;text-align:center;box-shadow:10px 12px 0 #0007;opacity:.3;transform:scale(.95);transition:opacity .6s,transform .6s}
+.ph.p2{background:#c6b3f0}.ph.p3{background:#ffe025}
+.ph i{display:block;font:normal 900 34px Inter,Arial}.ph b{display:block;font:900 24px Inter,Arial;margin:8px 0 12px}.ph span{font:600 18px/1.4 Inter,Arial}
+.phar{font-size:44px;color:var(--yellow);font-weight:900}
+.ph.p1,.slide[data-beat="1"] .ph.p2,.slide[data-beat="2"] .ph.p2,.slide[data-beat="2"] .ph.p3{opacity:1;transform:none}
+.pbar{position:absolute;left:120px;right:120px;top:272px;height:10px;border-radius:6px;background:#3a3640;overflow:hidden}
+.pbar i{display:block;height:100%;width:33%;background:var(--yellow);transition:width 1s ease}
+.slide[data-beat="1"] .pbar i{width:66%}.slide[data-beat="2"] .pbar i{width:100%}
+.pchip{position:absolute;left:50%;top:304px;transform:translateX(-50%);padding:9px 18px;border-radius:9px;background:#161616;border:1px solid #746525;color:var(--yellow);font:800 17px Inter,Arial;opacity:0;transition:opacity .7s .5s}
+.slide[data-beat="2"] .pchip{opacity:1}
+.kcard{position:absolute;top:0;left:40px;width:420px;height:230px;border-radius:36px 36px 14px 14px;background:#ffe025;color:#16131b;text-align:center;padding:24px;box-shadow:10px 12px 0 #0007}
+.kcard.pub{left:780px;background:#c6b3f0}
+.kcard span{display:block;font-size:48px}.kcard b{display:block;font:900 20px Inter,Arial;margin:6px 0}.kcard code{display:block;font:700 24px Consolas,monospace;margin:6px 0}.kcard small{font:700 15px Inter,Arial}
+.kder{position:absolute;left:490px;top:96px;width:260px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.kder span{font:900 15px Inter,Arial;color:var(--yellow);letter-spacing:2px}
+.kder i{display:block;width:100%;height:6px;background:var(--yellow);position:relative}
+.kder i:after{content:"";position:absolute;right:-6px;top:-8px;border-left:18px solid var(--yellow);border-top:11px solid transparent;border-bottom:11px solid transparent}
+.krow{position:absolute;left:0;right:0;top:268px;display:flex;justify-content:center;gap:26px}
+.kmsg,.ksig,.kok{padding:12px 20px;border-radius:12px;font:800 18px Consolas,monospace;background:#e8e4d7;color:#16131b;box-shadow:0 6px 0 #0006}
+.ksig{background:#ffe025}.kok{background:#96f1bb;color:#0c3b25}
+.acct{position:absolute;left:420px;top:0;width:700px;background:#c6b3f0;color:#16131b;border-radius:32px 32px 14px 14px;padding:26px 28px;box-shadow:12px 14px 0 #0007}
+.acct.seqc{left:0;width:520px}
+.bal{display:flex;justify-content:space-between;align-items:center;gap:14px;background:#f4ecff8a;border-radius:10px;padding:13px 16px;margin:9px 0;font:700 20px Consolas,monospace}
+.bal small{font:inherit;opacity:.85;margin-left:auto}.bal em{font:600 14px Inter,Arial;opacity:.65;font-style:normal;min-width:130px;text-align:right}
+.trust{position:absolute;left:40px;width:340px;padding:12px 16px;border-radius:12px;background:#161616;border:1px solid #746525;color:var(--yellow);font:800 17px Consolas,monospace;text-align:center}
+.sq1{display:none}.slide:not([data-beat="0"]) .sq0{display:none}.slide:not([data-beat="0"]) .sq1{display:inline}
+.txc{position:absolute;left:600px;top:0;width:300px;padding:22px;border-radius:26px 26px 12px 12px;background:#e8e4d7;color:#16131b;text-align:center;box-shadow:10px 12px 0 #0007}
+.txc b{display:block;font:900 18px Inter,Arial;letter-spacing:1px}.txc span{display:block;margin:8px 0;font:700 17px Inter,Arial}.txc code{font:800 19px Consolas,monospace}
+.txc.dup{left:940px;background:#e8e4d780;border:3px dashed #8a8590;box-shadow:none;opacity:0;transition:opacity .6s}
+.slide[data-beat="2"] .txc.dup{opacity:1}
+.res{position:absolute;left:0;right:0;text-align:center;font:800 21px Inter,Arial;color:#96f1bb;opacity:0;transition:opacity .6s}
+.res.r1{top:215px}.res.r2{top:268px}.res.bad{color:#ff9ea7}
+.res span{display:inline-block;margin-right:8px;font-weight:900}
+.slide:not([data-beat="0"]) .res.r1{opacity:1}.slide[data-beat="2"] .res.r2{opacity:1}
+.ops{position:absolute;left:0;right:0;top:20px;display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
+.op{background:#e8e4d7;color:#16131b;border-radius:36px 36px 14px 14px;padding:26px 16px;text-align:center;box-shadow:8px 12px 0 #0007;min-height:250px;transition:opacity .5s,transform .5s,box-shadow .4s,background .4s}
+.op:nth-child(2n){background:#c6b3f0}.op:nth-child(3n){background:#ffe025}
+.op i{display:block;font:normal 46px sans-serif;margin-bottom:12px}.op code{display:block;font:800 17px Consolas,monospace;margin-bottom:12px;overflow-wrap:anywhere}.op span{font:600 17px/1.35 Inter,Arial}
+.slide[data-beat="0"] .op:nth-child(1){transform:translateY(-12px);box-shadow:0 0 0 5px var(--yellow),8px 18px 0 #0007}
+.slide[data-beat="1"] .op:nth-child(2){transform:translateY(-12px);box-shadow:0 0 0 5px var(--yellow),8px 18px 0 #0007}
+.slide[data-beat="2"] .op:nth-child(3){transform:translateY(-12px);box-shadow:0 0 0 5px var(--yellow),8px 18px 0 #0007}
+.slide[data-beat="3"] .op:nth-child(4){transform:translateY(-12px);box-shadow:0 0 0 5px var(--yellow),8px 18px 0 #0007}
+.slide[data-beat="4"] .op:nth-child(5){transform:translateY(-12px);box-shadow:0 0 0 5px var(--yellow),8px 18px 0 #0007}
+.capx{position:absolute;left:0;right:0;top:340px;margin:0;text-align:center;font-size:23px;color:#efede8}
+.env{position:absolute;left:40px;top:0;width:700px;background:#e8e4d7;color:#16131b;border-radius:30px 30px 14px 14px;padding:22px 26px;box-shadow:12px 14px 0 #0007}
+.envh{display:flex;justify-content:space-between;align-items:center;font:900 20px Inter,Arial;margin-bottom:12px}
+.stamp{padding:6px 14px;border:3px solid #b5202f;color:#b5202f;border-radius:8px;font:900 16px Inter,Arial;transform:rotate(-4deg)}
+.eop{display:flex;align-items:center;gap:10px;background:#fff9;border-radius:10px;padding:13px 16px;margin:9px 0;font:700 19px Consolas,monospace;position:relative}
+.eop code{background:#c6b3f0;border-radius:6px;padding:2px 8px;font:800 17px Consolas,monospace}
+.envarrow{position:absolute;left:760px;top:130px;width:120px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.envarrow span{font:800 14px Inter,Arial;color:var(--yellow)}
+.envarrow i{display:block;width:100%;height:6px;background:var(--yellow);position:relative}
+.envarrow i:after{content:"";position:absolute;right:-6px;top:-8px;border-left:18px solid var(--yellow);border-top:11px solid transparent;border-bottom:11px solid transparent}
+.netbox{position:absolute;left:900px;top:70px;width:300px;padding:30px 20px;border-radius:30px 30px 12px 12px;background:#d3fff0;color:#0c3b25;text-align:center;box-shadow:10px 12px 0 #0007}
+.netbox b{display:block;font:900 24px Inter,Arial}.netbox small{font:700 16px Inter,Arial}
+.eres{margin-left:auto;position:relative;min-width:140px;text-align:right}
+.eres i{font-style:normal;font:800 17px Inter,Arial;opacity:0;position:absolute;right:0;top:50%;transform:translateY(-50%);white-space:nowrap;transition:opacity .5s}
+.rok{color:#13834f}.rbad{color:#6b6670}.rbad.x{color:#b5202f}
+.slide[data-beat="1"] .rok,.slide[data-beat="2"] .rok{transition-delay:calc(var(--i)*.5s)}
+.slide[data-beat="1"] .rok{opacity:1}
+.slide[data-beat="2"] .rbad{opacity:1}
+.slide.atomic[data-beat="2"] .eop:nth-child(2),.slide.atomic[data-beat="2"] .eop:nth-child(4){opacity:.6;text-decoration:line-through}
+.slide.atomic[data-beat="2"] .eop:nth-child(3){background:#ffd1d1}
+.verdict{position:absolute;left:800px;top:70px;font:900 100px 'Horror',Impact,sans-serif;opacity:0;transition:opacity .6s;color:var(--yellow);text-shadow:4px 4px 0 #0007}
+.verdict.v2{color:#ff7d86}
+.slide[data-beat="1"] .v1{opacity:1}.slide[data-beat="2"] .v2{opacity:1}
+
+code.mini{display:inline-block;margin-top:8px;background:#0001;border-radius:8px;padding:8px 12px;font:700 15px/1.5 Consolas,monospace;text-align:left}
+.sbx{position:absolute;left:350px;top:10px;width:540px;height:230px;border:4px dashed #24ced6;border-radius:34px;background:#24ced60f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px}
+.sbx b{font:900 17px Inter,Arial;letter-spacing:3px;color:#9fe8ec}
+.wasmchip{padding:20px 34px;border-radius:16px;background:#ffe025;color:#16131b;font:900 26px Consolas,monospace;box-shadow:0 8px 0 #0006}
+.sin,.sout{position:absolute;top:100px;padding:12px 16px;border-radius:12px;font:800 17px Consolas,monospace;background:#e8e4d7;color:#16131b;box-shadow:0 6px 0 #0006}
+.sin{left:30px}.sout{left:960px;background:#96f1bb;color:#0c3b25}
+.sarr{position:absolute;top:122px;width:80px;height:5px;background:var(--yellow)}
+.sarr:after{content:"";position:absolute;right:-5px;top:-7px;border-left:16px solid var(--yellow);border-top:9.5px solid transparent;border-bottom:9.5px solid transparent}
+.sarr.a1{left:250px}.sarr.a2{left:895px;width:50px}
+.snodes{position:absolute;left:0;right:0;top:262px;display:flex;justify-content:center;gap:34px}
+.sn{position:relative;width:250px;padding:16px 10px;border-radius:18px 18px 10px 10px;background:#d9d0ef;color:#17151d;text-align:center;font:900 17px Inter,Arial;box-shadow:0 7px 0 #0005;opacity:0;transform:translateY(14px);transition:opacity .5s,transform .5s}
+.sn small{display:block;margin-top:4px;font:700 14px Consolas,monospace;opacity:.8}
+.slide[data-beat="2"] .sn{opacity:1;transform:none;transition-delay:calc(var(--i)*.45s)}
+.rcard{position:absolute;left:470px;top:0;width:320px;height:300px;border-radius:36px 36px 14px 14px;background:#c6b3f0;color:#16131b;padding:26px 22px;text-align:center;box-shadow:12px 14px 0 #0007;transition:box-shadow .6s}
+.rcard b{display:block;font:900 22px Inter,Arial;letter-spacing:2px}.rcard small{display:block;margin:8px 0 14px;font:700 15px Inter,Arial}
+.rcard code{display:inline-block;background:#fff8;border-radius:10px;padding:10px 16px;font:800 18px/1.6 Consolas,monospace;text-align:left}
+.rchip{display:block;margin:16px auto 0;width:fit-content;padding:6px 12px;border-radius:999px;background:#161616;color:var(--yellow);font:800 13px Inter,Arial;opacity:0;transition:opacity .6s}
+.slide[data-beat="2"] .rcard{box-shadow:0 0 0 6px #ffe02588,12px 14px 0 #0007}.slide[data-beat="2"] .rchip{opacity:1}
+.rrow{position:absolute;left:0;right:0;display:flex;align-items:center}
+.rrow.r1{top:60px}.rrow.r2{top:190px}
+.rq{position:absolute;left:10px;width:390px;padding:14px 16px;border-radius:12px;background:#e8e4d7;color:#16131b;font:800 18px Consolas,monospace;box-shadow:0 6px 0 #0006}
+.rarr{position:absolute;left:410px;font:900 38px Inter,Arial;color:var(--yellow)}
+.rok,.rno{position:absolute;left:830px;width:390px;padding:14px 16px;border-radius:12px;font:800 18px Inter,Arial;box-shadow:0 6px 0 #0006}
+.rok{background:#96f1bb;color:#0c3b25}.rno{background:#ff9ea7;color:#5a0d17}
+.ph.p1 code.mini{font-size:13px;line-height:1.35;padding:6px 10px;margin-top:4px}.ph.p1 i{margin-bottom:-4px}</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true"><defs><filter id="paperRough" x="-5%" y="-12%" width="110%" height="124%"><feTurbulence baseFrequency="0.018 0.064" numOctaves="2" seed="4" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="4" xChannelSelector="R" yChannelSelector="B"/></filter></defs></svg>
@@ -62,18 +251,19 @@ html,body{background:#131313}#controls,#notePanel,.number{display:none!important
 <div class="hint" id="chainHint">Pulsa <strong>→</strong> para construir la cadena, paso por paso.</div></section>
 <section class="slide" data-title="Una red distribuida" data-max="2" data-notes="PASO 1: 'A diferencia de una lista enlazada guardada en una sola computadora, una blockchain se replica entre los nodos.'\nPASO 2: 'Los nodos intercambian información y verifican las reglas del protocolo.'\nPASO 3: Pulsa SINCRONIZAR RED. 'Los nodos participantes pueden ponerse de acuerdo sobre un historial válido. No significa que todos los nodos tengan siempre copias exactamente idénticas en el mismo instante.'\nEvita decir que siempre vota la mayoría de nodos: cada red tiene su propio consenso.">
 <header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 RED DISTRIBUIDA ✦</div><h1 class="horror">NO VIVE EN UNA SOLA COMPUTADORA.</h1><p class="subtitle">Múltiples nodos mantienen y validan el historial.</p></header>
-<div class="side-explain left reveal" data-at="1"><strong>Una historia.</strong>Distintos nodos comparten información para verificar la red.</div><div class="side-explain reveal" data-at="2"><strong>Sin servidor único.</strong>La coordinación depende de las reglas de consenso.</div>
-<div class="net-diagram" id="networkScene"><svg class="net-lines" viewBox="0 0 760 385"><line x1="378" y1="58" x2="92" y2="190"/><line x1="378" y1="58" x2="670" y2="190"/><line x1="92" y1="190" x2="245" y2="333"/><line x1="670" y1="190" x2="525" y2="333"/><line x1="245" y1="333" x2="525" y2="333"/><line x1="92" y1="190" x2="670" y2="190"/></svg><div class="network-packet"></div>
-<div class="node n1"><div class="machine">▣</div><label>NODO A</label><div class="mini"><i></i><i></i><i></i></div><div class="status">historial</div></div>
-<div class="node n2"><div class="machine">▣</div><label>NODO B</label><div class="mini"><i></i><i></i><i></i></div><div class="status">historial</div></div>
-<div class="node n3"><div class="machine">▣</div><label>NODO C</label><div class="mini"><i></i><i></i><i></i></div><div class="status">historial</div></div>
-<div class="node n4"><div class="machine">▣</div><label>NODO D</label><div class="mini"><i></i><i></i><i></i></div><div class="status">historial</div></div>
-<div class="node n5"><div class="machine">▣</div><label>NODO E</label><div class="mini"><i></i><i></i><i></i></div><div class="status">historial</div></div></div>
-<div class="action-centre"><button class="demo-btn" id="syncBtn">✦ Sincronizar red</button></div></section>
+<div class="side-explain left reveal" data-at="0"><strong>Una copia en cada nodo.</strong>Miles de computadoras guardan la misma cadena, al mismo tiempo.</div><div class="side-explain reveal" data-at="2"><strong>La mayoría decide.</strong>Para agregar un bloque, la mayoría de la red debe estar de acuerdo.</div>
+<div class="net-diagram" id="networkScene"><svg class="net-lines" viewBox="0 0 760 385"><line x1="378" y1="58" x2="92" y2="190"/><line x1="378" y1="58" x2="670" y2="190"/><line x1="92" y1="190" x2="245" y2="333"/><line x1="670" y1="190" x2="525" y2="333"/><line x1="245" y1="333" x2="525" y2="333"/><line x1="92" y1="190" x2="670" y2="190"/></svg><div class="network-packet"></div><i class="pk" style="--dx:-286px;--dy:135px"></i><i class="pk" style="--dx:289px;--dy:135px"></i><i class="pk" style="--dx:-136px;--dy:268px"></i><i class="pk" style="--dx:139px;--dy:268px"></i>
+<div class="node n1"><div class="machine">▣</div><label>NODO A</label><div class="mini"><i></i><i></i><i></i><i class="new"></i></div><div class="status">copia idéntica</div><b class="badge">✓</b></div>
+<div class="node n2"><div class="machine">▣</div><label>NODO B</label><div class="mini"><i></i><i></i><i></i><i class="new"></i></div><div class="status">copia idéntica</div><b class="badge">✓</b></div>
+<div class="node n3"><div class="machine">▣</div><label>NODO C</label><div class="mini"><i></i><i></i><i></i><i class="new"></i></div><div class="status">copia idéntica</div><b class="badge">✓</b></div>
+<div class="node n4"><div class="machine">▣</div><label>NODO D</label><div class="mini"><i></i><i></i><i></i><i class="new"></i></div><div class="status">copia idéntica</div><b class="badge">✓</b></div>
+<div class="node n5"><div class="machine">▣</div><label>NODO E</label><div class="mini"><i></i><i></i><i></i><i class="new"></i></div><div class="status">copia idéntica</div><b class="badge">✓</b></div></div>
+<div class="quorum reveal" data-at="1" id="quorum"><span id="quorumText">Votos: 0 / 5</span><span class="pips"><i></i><i></i><i></i><i></i><i></i></span></div>
+<div class="action-centre"><button class="demo-btn" id="syncBtn">↺ Repetir animación</button></div></section>
 <section class="slide" data-title="Anatomía de un bloque" data-max="4" data-notes="PASO 1: 'El hash del bloque anterior mantiene el enlace criptográfico.'\nPASO 2: 'La marca temporal sitúa los eventos en el tiempo. Su representación cambia según el protocolo.'\nPASO 3: 'Una raíz Merkle compromete criptográficamente un conjunto de transacciones, cuando el diseño de esa blockchain utiliza un árbol Merkle.'\nPASO 4: 'Además existen datos para validar o consensuar el bloque, y la estructura exacta no es igual en Bitcoin, Ethereum y Stellar.'\nEn esta ilustración usamos un bloque didáctico, no el formato binario exacto de Stellar.">
-<header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 ANATOMÍA ✦</div><h1 class="horror">¿QUÉ GUARDA UN BLOQUE?</h1><p class="subtitle">Toca cada campo para entender qué función cumple.</p></header>
-<div class="anatomy-stage"><div class="anatomy-block"><div class="blockhead"><span>✦ BLOQUE #027</span><span>⛓</span></div><button class="anatomy-row" data-field="0"><b>Hash anterior</b><small>0xa3f2…</small></button><button class="anatomy-row" data-field="1"><b>Marca temporal</b><small>2026-10-29</small></button><button class="anatomy-row" data-field="2"><b>Raíz de transacciones</b><small>0x9c1d…</small></button><button class="anatomy-row" data-field="3"><b>Datos de validación</b><small>según protocolo</small></button></div></div>
-<div class="anatomy-desc" id="fieldExplain"><h2>ELIGE UN CAMPO ✦</h2><p>Cada parte ayuda a vincular, organizar o validar la información.</p><div class="chip">↗ Usa → o toca una fila</div></div></section>
+<header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 ANATOMÍA ✦</div><h1 class="horror">DENTRO DE UN BLOQUE.</h1><p class="subtitle">El hash conecta. Las firmas autorizan.</p></header>
+<div class="anatomy-stage"><div class="grimoire"><div class="gtitle">GRIMORIO DEL DESARROLLADOR · NOTAS DE LABORATORIO</div><pre><span class="gl" style="--i:0"><b>01</b>┌─────────────────────────────────┐</span><span class="gl" style="--i:1"><b>02</b>│  Block Header                   │</span><span class="gl gline" data-field="0" style="--i:2"><b>03</b>│  ├─ prev_hash: 0xA3F2…          │</span><span class="gl gline" data-field="1" style="--i:3"><b>04</b>│  ├─ timestamp: 1730150400       │</span><span class="gl gline" data-field="2" style="--i:4"><b>05</b>│  ├─ merkle_root: 0x9C1D…        │</span><span class="gl gline" data-field="3" style="--i:5"><b>06</b>│  └─ nonce / validator_sig       │</span><span class="gl" style="--i:6"><b>07</b>├─────────────────────────────────┤</span><span class="gl" style="--i:7"><b>08</b>│  Transactions []                │</span><span class="gl" style="--i:8"><b>09</b>│  ├─ tx_0: Alice → Bob 10 XLM    │</span><span class="gl" style="--i:9"><b>10</b>│  ├─ tx_1: Bob → Carol 5 XLM     │</span><span class="gl" style="--i:10"><b>11</b>│  └─ ...                         │</span><span class="gl" style="--i:11"><b>12</b>└─────────────────────────────────┘</span></pre><small class="gnote">Modelo conceptual · no es el header de Stellar</small></div></div>
+<div class="anatomy-desc" id="fieldExplain"><h2>UN BLOQUE ✦</h2><p>Un encabezado que enlaza y valida, y debajo las transacciones.</p><div class="chip">↗ Usa → para recorrer cada campo</div></div></section>
 <section class="slide" data-title="Árbol de Merkle" data-max="2" data-notes="PASO 1: 'Un árbol de Merkle resume las transacciones en una sola raíz criptográfica.'\nPASO 2: 'No necesito descargar todas las transacciones para verificar la pertenencia de una transacción si dispongo de una prueba Merkle válida.'\nPASO 3: Haz clic en TX 3 para iluminar el camino hacia la raíz. 'Los hashes de los nodos hermanos permiten reconstruir la raíz y compararla con la raíz confiable del bloque.'\nEl dibujo muestra hashes ilustrativos, no un cálculo SHA-256 en vivo.">
 <header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 MERKLE TREE ✦</div><h1 class="horror">VERIFICA SIN LEERLO TODO.</h1><p class="subtitle">Un árbol de hashes resume y prueba la inclusión de transacciones.</p></header>
 <div class="merkle-diagram" id="merkleScene"><svg class="merkle-svg" viewBox="0 0 880 420">
@@ -100,6 +290,99 @@ html,body{background:#131313}#controls,#notePanel,.number{display:none!important
 <section class="slide" data-title="Puente hacia Stellar" data-max="1" data-notes="CIERRE DEL ACTO.\n'Ya entendemos la idea: una cadena de bloques enlazados mediante hashes, verificada en red y coordinada por consenso.'\n'En Stellar ese acuerdo se consigue mediante SCP. Ahora viene nuestra pregunta: si un agente de inteligencia artificial necesita manejar dinero, ¿cómo pasa de tomar decisiones a enviar pagos seguros y verificables?'\nTransición al siguiente bloque de la presentación.">
 <header class="slide-header"><div class="eyebrow"><b>FIN DEL ACTO 02</b>　 EL SIGUIENTE PASO ✦</div></header>
 <div class="final-copy"><h1 class="horror">Y SI UN AGENTE<br>NECESITA<br><em>PAGAR...</em></h1><p>Del consenso al movimiento de valor.<br>La historia continúa con Stellar.</p><div class="chip good">✦ PREPARADOS PARA ACTO 03</div></div><div class="final-orbit"><div class="wallet">▣</div><div class="coin">✧</div></div><div class="spark" style="top:340px;left:765px">✦</div><div class="spark cyan" style="top:645px;left:695px">✦</div></section>
+
+<section class="slide" data-title="Muchas transacciones, una huella" data-max="2" data-notes="PASO 1: 'El cuerpo del bloque guarda una lista de transacciones.'\nPASO 2: 'Esa lista puede crecer a cientos o miles de transacciones.'\nPASO 3: 'El merkle_root las resume todas en una sola huella de tamaño fijo dentro del encabezado. Si cambia una transacción, cambia la raíz.'">
+<header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 MERKLE ROOT ✦</div><h1 class="horror">MUCHAS TRANSACCIONES. UNA HUELLA.</h1><p class="subtitle">El encabezado resume todo el cuerpo del bloque en un solo campo.</p></header>
+<div class="tx-scene">
+<div class="txcard"><div class="txhead">Transactions []</div>
+<div class="txrow reveal" data-at="0">tx_0: Alice → Bob 10 XLM</div><div class="txrow reveal" data-at="0">tx_1: Bob → Carol 5 XLM</div>
+<div class="txrow reveal" data-at="1">tx_2: Carol → Dave 2 XLM</div><div class="txrow reveal" data-at="1">tx_3: Dave → Erin 8 XLM</div><div class="txrow reveal" data-at="1">… cientos más</div></div>
+<div class="txflow"><i></i><i></i><i></i><b>HASH</b></div>
+<div class="hdrcard"><div class="txhead">Block Header</div>
+<div class="hrow">prev_hash<small>0xA3F2…</small></div><div class="hrow">timestamp<small>1730150400</small></div>
+<div class="hrow root">merkle_root<small class="rv0">?</small><small class="rv1">0x9C1D…</small></div><div class="hrow">nonce / validator_sig<small>…</small></div></div>
+<p class="cap c0">El cuerpo del bloque guarda una lista de transacciones.</p><p class="cap c1">Y esa lista puede crecer a cientos o miles.</p><p class="cap c2"><b>merkle_root</b> las resume todas en una sola huella de tamaño fijo. Cambia una transacción y cambia la raíz.</p>
+</div>
+<div class="action-centre reveal" data-at="2"><button class="demo-btn" id="txBtn">↺ Repetir animación</button></div></section>
+<section class="slide" data-title="La firma autoriza el bloque" data-max="2" data-notes="PASO 1: 'Un bloque válido necesita la firma de un validador.'\nPASO 2: 'El validador firma el encabezado con su clave privada.'\nPASO 3: 'Cualquier nodo verifica la firma con la clave pública. Pulsa ALTERAR TIMESTAMP: si cambia un solo campo, la firma ya no coincide.'\nEl formato exacto de firmas y validación depende del protocolo.">
+<header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 FIRMA ✦</div><h1 class="horror">LA FIRMA AUTORIZA EL BLOQUE.</h1><p class="subtitle">Solo quien tiene la clave puede firmar. Todos pueden verificar.</p></header>
+<div class="sig-scene" id="sigScene">
+<div class="signer"><div class="skey">🔑</div><b>VALIDADOR</b><small>clave privada</small></div>
+<div class="sigarrow"><span>FIRMA</span><i></i></div>
+<div class="sigblock"><div class="txhead">Block Header</div>
+<div class="hrow">prev_hash<small>0xA3F2…</small></div><div class="hrow">timestamp<small class="ts">1730150400</small></div><div class="hrow">merkle_root<small>0x9C1D…</small></div>
+<div class="hrow sigrow">validator_sig<small class="sv0">sin firmar</small><small class="sv1">0xB94E…</small></div></div>
+<div class="verifiers"><div class="vnode" style="--i:0">NODO A<i class="vk"></i></div><div class="vnode" style="--i:1">NODO B<i class="vk"></i></div><div class="vnode" style="--i:2">NODO C<i class="vk"></i></div><small class="vlabel">verifican con la clave pública</small></div>
+<p class="cap c0">Un bloque válido necesita la firma de un validador.</p><p class="cap c1">El validador firma el encabezado con su clave privada.</p><p class="cap c2">Cualquier nodo verifica la firma con la clave pública.</p><p class="cap c3">Cambió un campo: la firma ya no coincide y ningún nodo acepta el bloque.</p>
+</div>
+<div class="action-centre reveal" data-at="2"><button class="demo-btn" id="sigBtn">⚡ Alterar timestamp</button></div></section>
+
+<section class="slide" data-title="Cada nodo elige en quién confía" data-max="2" data-notes="PASO 1: 'Cada nodo decide por sí mismo en quién confía.'\nPASO 2: 'Ese conjunto mínimo es su quorum slice.'\nPASO 3: 'Si su slice está de acuerdo, el nodo avanza.'"><header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 QUORUM SLICE ✦</div><h1 class="horror">CADA NODO ELIGE EN QUIÉN CONFÍA.</h1><p class="subtitle">En SCP no hay líder: cada nodo define su propio grupo de confianza.</p></header><div class="sc"><svg class="qsvg" viewBox="0 0 1241 400"><line class="ql" x1="630" y1="40" x2="250" y2="190"/><line class="ql" x1="630" y1="40" x2="1010" y2="190"/></svg>
+<div class="qn me" style="left:560px;top:0">NODO A<small>decide</small></div>
+<div class="qn sl" style="left:180px;top:150px">NODO B<i class="vk" style="--i:0"></i></div>
+<div class="qn sl" style="left:940px;top:150px">NODO C<i class="vk" style="--i:1"></i></div>
+<div class="qn" style="left:360px;top:290px">NODO D</div><div class="qn" style="left:760px;top:290px">NODO E</div>
+<span class="qtag" style="left:500px;top:100px">quorum slice de A = { B, C }</span>
+<p class="cap c0">Cada nodo decide por sí mismo en quién confía.</p><p class="cap c1">El conjunto mínimo en el que confía es su <b>quorum slice</b>.</p><p class="cap c2">Si su slice está de acuerdo, el nodo avanza. Nadie necesita a toda la red.</p></div><div class="action-centre reveal" data-at="2"><button class="demo-btn replay" id="rp11">↺ Repetir animación</button></div></section>
+<section class="slide" data-title="Los quórums se superponen" data-max="2" data-notes="PASO 1: 'Cada grupo de nodos forma un quórum.'\nPASO 2: 'Los quórums comparten nodos: ahí se cruzan.'\nPASO 3: 'Esa intersección impide que dos grupos confirmen historias opuestas.'"><header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 QUÓRUMS ✦</div><h1 class="horror">LOS QUÓRUMS SE SUPERPONEN.</h1><p class="subtitle">Donde se cruzan, la red se mantiene coherente.</p></header><div class="sc"><div class="qring r1"><b>QUÓRUM 1</b></div><div class="qring r2"><b>QUÓRUM 2</b></div>
+<div class="qn" style="left:140px;top:80px">NODO A</div><div class="qn" style="left:140px;top:220px">NODO B</div>
+<div class="qn mid" style="left:550px;top:150px">NODO C</div>
+<div class="qn" style="left:960px;top:80px">NODO D</div><div class="qn" style="left:960px;top:220px">NODO E</div>
+<span class="qtag" style="left:520px;top:250px">nodo en común</span>
+<p class="cap c0">Cada grupo de nodos forma un quórum.</p><p class="cap c1">Los quórums comparten nodos: ahí se cruzan.</p><p class="cap c2">Por esa intersección, dos grupos no pueden confirmar historias opuestas.</p></div><div class="action-centre reveal" data-at="2"><button class="demo-btn replay" id="rp12">↺ Repetir animación</button></div></section>
+<section class="slide" data-title="Sin reorganizaciones" data-max="2" data-notes="PASO 1: 'Los nodos nominan valores.'\nPASO 2: 'Votan hasta que un quórum acepta.'\nPASO 3: 'El ledger se cierra, en torno a cinco segundos, sin reorganizaciones.'"><header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 FINALIDAD ✦</div><h1 class="horror">SIN REORGANIZACIONES.</h1><p class="subtitle">Una vez confirmado, está confirmado.</p></header><div class="sc"><div class="phases"><div class="ph p1"><i>1</i><b>NOMINAR</b><span>Los nodos proponen valores para el siguiente ledger.</span></div><span class="phar">→</span>
+<div class="ph p2"><i>2</i><b>VOTAR</b><span>Votan y confirman hasta que un quórum acepta.</span></div><span class="phar">→</span>
+<div class="ph p3"><i>3</i><b>CERRAR</b><span>El ledger se cierra: no hay vuelta atrás.</span></div></div>
+<div class="pbar"><i></i></div><div class="pchip">≈ 5 s · sin forks · sin reorganizaciones</div>
+<p class="cap c0">Primero, los nodos nominan qué incluir.</p><p class="cap c1">Luego votan hasta que un quórum acepta.</p><p class="cap c2">Se cierra el ledger en unos cinco segundos. A diferencia de Bitcoin, no hay reorganizaciones de cadena.</p></div><div class="action-centre reveal" data-at="2"><button class="demo-btn replay" id="rp13">↺ Repetir animación</button></div></section>
+<section class="slide" data-title="Un par de claves" data-max="2" data-notes="PASO 1: 'Una cuenta es un par de claves Ed25519.'\nPASO 2: 'La privada firma las transacciones.'\nPASO 3: 'Cualquiera verifica con la pública. La privada nunca sale del firmante.'"><header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 CUENTAS ✦</div><h1 class="horror">UN PAR DE CLAVES.</h1><p class="subtitle">La privada firma. La pública te identifica.</p></header><div class="sc"><div class="kcard"><span>🔑</span><b>CLAVE PRIVADA</b><code>S•••••••••••••</code><small>Nunca sale del firmante</small></div>
+<div class="kder"><span>deriva</span><i></i></div>
+<div class="kcard pub"><span>🪪</span><b>CLAVE PÚBLICA</b><code>GABC…XYZ</code><small>Tu dirección en la red</small></div>
+<div class="krow"><span class="kmsg reveal" data-at="1">mensaje: pagar 10 XLM</span><span class="ksig reveal" data-at="1">firma 0x7F3A…</span><span class="kok reveal" data-at="2">✓ firma válida</span></div>
+<p class="cap c0">Una cuenta es un par de claves (Ed25519).</p><p class="cap c1">La clave privada firma la transacción.</p><p class="cap c2">Cualquiera verifica la firma con la clave pública. Sin la privada, nadie puede firmar por ti.</p></div><div class="action-centre reveal" data-at="2"><button class="demo-btn replay" id="rp14">↺ Repetir animación</button></div></section>
+<section class="slide" data-title="Una cuenta, muchos activos" data-max="2" data-notes="PASO 1: 'Toda cuenta tiene XLM, el activo nativo.'\nPASO 2: 'Para recibir USDC primero acepta su trustline.'\nPASO 3: 'Lo mismo con cualquier token emitido por alguien más.'"><header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 ACTIVOS ✦</div><h1 class="horror">UNA CUENTA, MUCHOS ACTIVOS.</h1><p class="subtitle">Los activos emitidos requieren trustline.</p></header><div class="sc"><div class="trust reveal" data-at="1" style="top:150px">ChangeTrust → USDC</div><div class="trust reveal" data-at="2" style="top:230px">ChangeTrust → MY_TOKEN</div>
+<div class="acct"><div class="txhead">Account · GABC…XYZ</div>
+<div class="bal"><b>XLM</b><small>100.5</small><em>nativo</em></div>
+<div class="bal reveal" data-at="1"><b>USDC</b><small>50.0</small><em>emitido por Circle</em></div>
+<div class="bal reveal" data-at="2"><b>MY_TOKEN:GISSUER</b><small>200</small><em>emisor propio</em></div></div>
+<p class="cap c0">Toda cuenta empieza con XLM, el activo nativo.</p><p class="cap c1">Para recibir USDC, la cuenta primero acepta su trustline.</p><p class="cap c2">Igual con cualquier token emitido: una cuenta, muchos balances.</p></div><div class="action-centre reveal" data-at="2"><button class="demo-btn replay" id="rp15">↺ Repetir animación</button></div></section>
+<section class="slide" data-title="El sequence number evita repetir" data-max="2" data-notes="PASO 1: 'Cada cuenta lleva un sequence_number.'\nPASO 2: 'La transacción se acepta y el número avanza.'\nPASO 3: 'Reenviar la misma transacción falla: una transacción solo se ejecuta una vez.'"><header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 SEQUENCE NUMBER ✦</div><h1 class="horror">NI UNA VEZ MÁS.</h1><p class="subtitle">El sequence number evita los replay attacks.</p></header><div class="sc"><div class="acct seqc"><div class="txhead">Account · GABC…XYZ</div><div class="bal"><b>sequence_number</b><small class="sq0">12345678</small><small class="sq1">12345679</small></div></div>
+<div class="txc"><b>TRANSACCIÓN</b><span>pago 10 XLM</span><code>seq 12345679</code></div>
+<div class="txc dup"><b>REENVÍO</b><span>la misma transacción</span><code>seq 12345679</code></div>
+<div class="res r1"><span>✓</span> Aceptada · la cuenta ahora espera 12345680</div>
+<div class="res bad r2"><span>✗</span> Repetida: seq 12345679 ya fue usada → rechazada</div>
+<p class="cap c0">Cada cuenta lleva un sequence_number.</p><p class="cap c1">La transacción se acepta y el número avanza.</p><p class="cap c2">Reenviar la misma transacción falla: solo se ejecuta una vez.</p></div><div class="action-centre reveal" data-at="2"><button class="demo-btn replay" id="rp16">↺ Repetir animación</button></div></section>
+<section class="slide" data-title="Los verbos de Stellar" data-max="4" data-notes="PASO 1: Payment.\nPASO 2: ChangeTrust.\nPASO 3: ManageSellOffer.\nPASO 4: InvokeHostFunction (contratos Soroban).\nPASO 5: SetOptions.\nLas interacciones con la red se hacen mediante operaciones."><header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 OPERACIONES ✦</div><h1 class="horror">LOS VERBOS DE STELLAR.</h1><p class="subtitle">Cinco operaciones que verás una y otra vez.</p></header><div class="sc"><div class="ops">
+<div class="op reveal" data-at="0"><i>💸</i><code>Payment</code><span>Enviar un activo</span></div>
+<div class="op reveal" data-at="1"><i>🤝</i><code>ChangeTrust</code><span>Aceptar un activo emitido</span></div>
+<div class="op reveal" data-at="2"><i>📈</i><code>ManageSellOffer</code><span>Crear una oferta en el DEX</span></div>
+<div class="op reveal" data-at="3"><i>📜</i><code>InvokeHostFunction</code><span>Invocar un contrato Soroban</span></div>
+<div class="op reveal" data-at="4"><i>🔐</i><code>SetOptions</code><span>Configurar firmas y umbrales</span></div></div>
+<p class="capx reveal" data-at="4">Y varias operaciones pueden agruparse en una sola transacción.</p></div></section>
+<section class="slide" data-title="Una transacción, varias operaciones" data-max="2" data-notes="PASO 1: 'Una transacción puede contener varias operaciones.'\nPASO 2: 'Una sola firma autoriza todo el paquete.'\nPASO 3: 'Se envía a la red como una unidad.'"><header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 TRANSACCIONES ✦</div><h1 class="horror">UNA TRANSACCIÓN, VARIAS OPERACIONES.</h1><p class="subtitle">Una sola firma autoriza todo el paquete.</p></header><div class="sc"><div class="env"><div class="envh"><b>TRANSACCIÓN</b><span class="stamp reveal" data-at="1">FIRMADA · 1 firma</span></div>
+<div class="eop"><code>Payment</code> A → B · 3 USDC</div><div class="eop"><code>Payment</code> B → C · 2 USDC</div><div class="eop"><code>Payment</code> C → D · 1 USDC</div></div>
+<div class="envarrow reveal" data-at="2"><i></i><span>un solo paquete</span></div><div class="netbox reveal" data-at="2"><b>RED STELLAR</b><small>valida y aplica</small></div>
+<p class="cap c0">Una transacción puede contener varias operaciones.</p><p class="cap c1">Una sola firma, la del agente, autoriza todo el paquete.</p><p class="cap c2">Se envía a la red como una unidad.</p></div><div class="action-centre reveal" data-at="2"><button class="demo-btn replay" id="rp18">↺ Repetir animación</button></div></section>
+<section class="slide atomic" data-title="Atómica: todo o nada" data-max="2" data-notes="PASO 1: 'Las operaciones esperan dentro de la transacción.'\nPASO 2: 'Si todas son válidas, todas se aplican.'\nPASO 3: 'Si una falla, ninguna se aplica. Para un agente con tres pagos encadenados: o salen los tres o no sale ninguno.'"><header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 ATOMICIDAD ✦</div><h1 class="horror">TODO O NADA.</h1><p class="subtitle">Si una operación falla, ninguna se aplica.</p></header><div class="sc"><div class="env"><div class="envh"><b>TRANSACCIÓN · 3 OPERACIONES</b></div>
+<div class="eop"><code>Payment</code> A → B · 3 USDC<span class="eres"><i class="rok" style="--i:0">✓</i><i class="rbad">↩ revertida</i></span></div>
+<div class="eop"><code>Payment</code> B → C · 2 USDC<span class="eres"><i class="rok" style="--i:1">✓</i><i class="rbad x">✗ falla</i></span></div>
+<div class="eop"><code>Payment</code> C → D · 1 USDC<span class="eres"><i class="rok" style="--i:2">✓</i><i class="rbad">↩ revertida</i></span></div></div>
+<div class="verdict v1">TODO</div><div class="verdict v2">NADA</div>
+<p class="cap c0">Las operaciones esperan dentro de la transacción.</p><p class="cap c1">Si todas son válidas, todas se aplican.</p><p class="cap c2">Si una falla, ninguna se aplica: o salen los tres pagos o no sale ninguno.</p></div><div class="action-centre reveal" data-at="2"><button class="demo-btn replay" id="rp19">↺ Repetir animación</button></div></section>
+
+<section class="slide" data-title="Del código al ledger" data-max="2" data-notes="PASO 1: 'Los contratos de Soroban se escriben en Rust.'\nPASO 2: 'Se compilan a WebAssembly.'\nPASO 3: 'Y se despliegan en el ledger de Stellar. Soroban existe desde 2023.'\nRust ayuda a evitar errores de memoria, pero no garantiza ausencia de bugs."><header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 SOROBAN ✦</div><h1 class="horror">DEL CÓDIGO AL LEDGER.</h1><p class="subtitle">Rust → WebAssembly → Stellar Ledger.</p></header><div class="sc"><div class="phases"><div class="ph p1"><i>🦀</i><b>CONTRATO EN RUST</b><span><code class="mini">#[contract]<br>pub fn transfer(…) {<br>&nbsp;&nbsp;// tu lógica de negocio<br>}</code></span></div><span class="phar">→</span>
+<div class="ph p2"><i>⚙️</i><b>WEBASSEMBLY</b><span><code class="mini">contrato.wasm</code><br>compilado, compacto y portable</span></div><span class="phar">→</span>
+<div class="ph p3"><i>📒</i><b>STELLAR LEDGER</b><span>El contrato queda desplegado y el estado es compartido.</span></div></div>
+<div class="pbar"><i></i></div><div class="pchip">contrato desplegado · dirección C…7QX</div>
+<p class="cap c0">Los contratos de Soroban se escriben en Rust.</p><p class="cap c1">Se compilan a WebAssembly (WASM).</p><p class="cap c2">Y se despliegan en el ledger de Stellar, donde su estado es compartido.</p></div><div class="action-centre reveal" data-at="2"><button class="demo-btn replay" id="rp20">↺ Repetir animación</button></div></section>
+<section class="slide" data-title="Un sandbox en la red" data-max="2" data-notes="PASO 1: 'El contrato se ejecuta en un sandbox dentro de la red.'\nPASO 2: 'Misma entrada, misma salida.'\nPASO 3: 'WASM es determinista: cualquier nodo obtiene el mismo resultado.'"><header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 SANDBOX ✦</div><h1 class="horror">UN SANDBOX DENTRO DE LA RED.</h1><p class="subtitle">WASM es determinista: misma entrada, misma salida.</p></header><div class="sc"><div class="sbx"><b>SANDBOX WASM</b><span class="wasmchip">contrato.wasm</span></div>
+<span class="sin reveal" data-at="1">transfer(A→B, 5)</span><i class="sarr a1 reveal" data-at="1"></i><i class="sarr a2 reveal" data-at="1"></i><span class="sout reveal" data-at="1">→ ok · estado actualizado</span>
+<div class="snodes"><div class="sn" style="--i:0">NODO A<small>resultado 0x4C1A…</small><i class="vk" style="--i:0"></i></div><div class="sn" style="--i:1">NODO B<small>resultado 0x4C1A…</small><i class="vk" style="--i:1"></i></div><div class="sn" style="--i:2">NODO C<small>resultado 0x4C1A…</small><i class="vk" style="--i:2"></i></div></div>
+<p class="cap c0">El contrato se ejecuta en un sandbox WebAssembly dentro de la red.</p><p class="cap c1">Misma entrada, misma salida.</p><p class="cap c2">Cada nodo ejecuta el mismo código y obtiene el mismo resultado: es determinista.</p></div><div class="action-centre reveal" data-at="2"><button class="demo-btn replay" id="rp21">↺ Repetir animación</button></div></section>
+<section class="slide" data-title="Reglas para agentes" data-max="2" data-notes="PASO 1: 'Un agente pide pagar a un destino aprobado: el contrato lo permite.'\nPASO 2: 'Pide pagar a uno desconocido: el contrato lo rechaza.'\nPASO 3: 'Reglas de negocio complejas, inmutables y verificables: cualquiera puede auditar el contrato.'"><header class="slide-header"><div class="eyebrow"><b>ACTO 02</b>　 PARA AGENTES ✦</div><h1 class="horror">REGLAS QUE EL AGENTE NO PUEDE SALTAR.</h1><p class="subtitle">Un contrato define lo que el agente puede hacer.</p></header><div class="sc"><div class="rcard"><b>CONTRATO</b><small>regla: solo destinos aprobados</small><code>GSHOP…  ✓<br>GAPI…&nbsp;&nbsp;✓</code><span class="rchip">código on-chain · auditable</span></div>
+<div class="rrow r1"><span class="rq">🤖 pagar a GSHOP…</span><span class="rarr">⟶</span><span class="rok">✓ aprobado por el contrato</span></div>
+<div class="rrow r2 reveal" data-at="1"><span class="rq">🤖 pagar a GUNKNOWN…</span><span class="rarr">⟶</span><span class="rno">✗ rechazado por el contrato</span></div>
+<p class="cap c0">Un agente pide pagar a un destino aprobado: el contrato lo permite.</p><p class="cap c1">Pide pagar a uno desconocido: el contrato lo rechaza, sin excepciones.</p><p class="cap c2">Reglas complejas, inmutables y verificables: cualquiera puede auditar el contrato.</p></div><div class="action-centre reveal" data-at="2"><button class="demo-btn replay" id="rp22">↺ Repetir animación</button></div></section>
 </main>
 <div id="controls" role="toolbar" aria-label="Controles de presentación"><button id="prevSlide" title="Diapositiva anterior (Mayús + ←)">◀ Slide</button><button id="prevBeat" title="Paso anterior (←)">←</button><span class="counter" id="counter">01 / 09</span><button id="nextBeat" class="main" title="Siguiente paso (→ o espacio)">Siguiente paso →</button><button id="nextSlide" title="Diapositiva siguiente (Mayús + →)">Slide ▶</button><button id="notesToggle" title="Notas de exposición (N)">☷ Notas</button><button id="fullScreen" title="Pantalla completa (F)">⛶</button></div>
 <aside id="notePanel" aria-label="Notas de orador"><button id="noteClose">Cerrar ✕</button><h3 id="noteTitle">Notas del expositor</h3><p id="noteText"></p><div class="keys">→ / espacio: siguiente paso · ←: anterior · Shift + flechas: cambiar de diapositiva · N: notas · F: pantalla completa · Home: inicio · End: final</div></aside><div id="toast" role="status"></div>
@@ -108,17 +391,17 @@ html,body{background:#131313}#controls,#notePanel,.number{display:none!important
 const deck=document.getElementById('presentation'),slides=[...document.querySelectorAll('.slide')];
 const deco=`<div class="trees"><svg viewBox="0 0 1461 837" preserveAspectRatio="none"><path d="M0 715 L0 335 L19 407 L35 338 L47 499 L90 410 L82 551 L135 488 L91 591 L72 720Z" fill="#252525"/><path d="M1461 728 L1461 178 L1436 278 L1423 216 L1404 404 L1355 314 L1382 448 L1300 358 L1374 515 L1389 733Z" fill="#252525"/></svg></div><div class="grounds"><svg viewBox="0 0 1461 205" preserveAspectRatio="none"><path fill="#242424" d="M0 107Q290 199 533 89Q765 -2 1030 119Q1265 187 1461 88L1461 205H0Z"/><path fill="none" stroke="#20cbd0" stroke-width="4" d="M0 107Q180 160 315 152M928 98Q1066 143 1150 145"/></svg></div><div class="prop-pumpkin"><svg viewBox="0 0 110 117"><path d="M55 35 Q52 9 77 8 Q64 20 68 36" fill="#27c8d4"/><path d="M13 52Q25 27 58 30Q95 28 104 60Q114 92 72 108Q34 118 9 93Q0 74 13 52" fill="#ffe025"/><path d="M30 66l10-15 9 18zM69 68l10-16 8 18z" fill="#141414"/><path d="M28 85Q53 105 89 83Q72 109 48 105Q35 100 28 85" fill="#141414"/><path d="M54 78l5 9 6-10z" fill="#faf0df"/></svg></div><div class="prop-ghost"><svg viewBox="0 0 125 135"><path d="M23 65Q20 34 59 32Q101 33 100 76L112 119L91 110L81 126L64 114L48 126L31 113L12 117Z" fill="#f3f1e5"/><ellipse cx="48" cy="71" rx="8" ry="12" fill="#ffe025"/><ellipse cx="79" cy="71" rx="8" ry="12" fill="#ffe025"/><path d="M51 94L77 94L63 101Z" fill="#131313"/><path d="M22 47L97 47L78 37L69 7L50 13L38 37Z" fill="#29292e"/><path d="M29 42L92 42L89 48L29 48Z" fill="#baa8ee"/><rect x="63" y="40" width="8" height="7" rx="1" fill="#ffe025"/></svg></div><div class="spark" style="left:248px;bottom:123px">✦</div><div class="spark cream" style="right:274px;bottom:104px">✦</div><div class="spark cyan" style="left:50%;bottom:123px">✦</div><footer class="foot">HALLOWEEN / UMSA · LA PAZ / 29 OCT 2026</footer><div class="number">☾ <span>STELLAR</span></div>`;
 slides.slice(1).forEach((s,i)=>{s.insertAdjacentHTML('afterbegin',deco);s.querySelector('.number').innerHTML=`${String(i+2).padStart(2,'0')}<span> / 09</span>`});
-let slide=0,beat=0,selectedTx=-1,selectedField=-1,tampered=false,synced=false,agreed=false,compared=-1,toastTimer;
+let slide=0,beat=0,selectedTx=-1,selectedField=-1,tampered=false,netKey='',netTimers=[],fbKey=-1,agreed=false,compared=-1,toastTimer;
 function resize(){const s=Math.min(window.innerWidth/1461,window.innerHeight/837);document.documentElement.style.setProperty('--deck-scale',String(s));}window.addEventListener('resize',resize);resize();
 function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('visible'),1800)}
 const titles=slides.map(x=>x.dataset.title);const max=(i=slide)=>Number(slides[i].dataset.max||0);
-function render(){slides.forEach((x,i)=>x.classList.toggle('active',i===slide));const el=slides[slide];el.querySelectorAll('.reveal').forEach(x=>x.classList.toggle('show',Number(x.dataset.at)<=beat));
+function render(){slides.forEach((x,i)=>x.classList.toggle('active',i===slide));const el=slides[slide];el.dataset.beat=beat;el.querySelectorAll('.reveal').forEach(x=>x.classList.toggle('show',Number(x.dataset.at)<=beat));
 document.getElementById('counter').textContent=`${String(slide+1).padStart(2,'0')} / ${String(slides.length).padStart(2,'0')}`;document.getElementById('progress').style.width=`${((slide+Math.max(0,beat)/Math.max(1,max()))/slides.length)*100}%`;
 document.getElementById('prevSlide').disabled=slide===0;document.getElementById('prevBeat').disabled=slide===0&&beat===0;document.getElementById('nextSlide').disabled=slide===slides.length-1;document.getElementById('nextBeat').textContent=slide===slides.length-1&&beat>=max()?'Fin ✓':beat>=max()?'Siguiente slide →':'Siguiente paso →';document.getElementById('nextBeat').disabled=slide===slides.length-1&&beat>=max();
 document.getElementById('noteTitle').textContent=`${String(slide+1).padStart(2,'0')} · ${titles[slide]}`;document.getElementById('noteText').textContent=el.dataset.notes||'';
 const chain=document.getElementById('chainScene');chain.classList.toggle('linked',slide===1&&beat>=2);if(slide===1){document.getElementById('chainHint').innerHTML=beat===0?'Pulsa <strong>→</strong> para mostrar el segundo bloque.':beat===1?'Ahora pulsa <strong>→</strong> para ver la huella que enlaza.':'<strong>Hash anterior = huella del bloque previo.</strong> Toca un bloque para señalarlo.'}
-if(slide===2&&beat>=2&&!synced){sync()}
-if(slide===3&&selectedField===-1&&beat>0)field(Math.min(beat-1,3),false);
+netPlay();
+if(slide!==3)fbKey=-1;else if(fbKey!==beat){fbKey=beat;if(beat>0)field(Math.min(beat-1,3),false);else clearField()}
 if(slide===4&&beat>=2&&selectedTx<0)merkle(2);
 if(slide===5&&beat===2&&!tampered)tamper(true);
 if(slide===6&&compared===-1&&beat>0)compare(Math.min(beat-1,2),false);
@@ -126,19 +409,25 @@ if(slide===7&&beat===2&&!agreed)agree(true);
 }
 function goto(i){if(i<0||i>=slides.length)return;slide=i;beat=0;resetSelected();render()}
 function next(){if(beat<max()){beat++;render()}else goto(slide+1)}function previous(){if(beat>0){beat--;render()}else if(slide>0){slide--;beat=max();render()}}
-function resetSelected(){document.querySelectorAll('.block-card.selected').forEach(x=>x.classList.remove('selected'));document.querySelectorAll('.hash-node.active').forEach(x=>x.classList.remove('active'));selectedTx=-1;selectedField=-1;document.querySelectorAll('.anatomy-row').forEach(x=>x.classList.remove('highlight'));document.getElementById('fieldExplain').innerHTML='<h2>ELIGE UN CAMPO ✦</h2><p>Cada parte ayuda a vincular, organizar o validar la información.</p><div class="chip">↗ Usa → o toca una fila</div>';compared=-1;document.querySelectorAll('.compare-card').forEach(x=>x.classList.remove('active'));document.getElementById('compareDetail').textContent='Pulsa una tarjeta para descubrir qué tipo de acuerdo representa.';synced=false;document.getElementById('networkScene').classList.remove('synchronized');document.getElementById('syncBtn').textContent='✦ Sincronizar red';document.querySelectorAll('.node .status').forEach(x=>x.textContent='historial');tamper(false);agreed=false;document.getElementById('scpScene').classList.remove('agreed');document.getElementById('scpStatus').textContent='';document.getElementById('agreeBtn').textContent='✦ Simular acuerdo';selectedTx=-1;merkle(-1)}
-function field(i,jump=true){const data=[['HASH DEL ANTERIOR','La huella criptográfica vincula este bloque con su predecesor.'],['MARCA TEMPORAL','Registra una referencia temporal según las reglas de la red.'],['RAÍZ MERKLE','Resume criptográficamente las transacciones y permite pruebas de inclusión.'],['VALIDACIÓN','Las firmas, pruebas o metadatos dependen del protocolo; no hay un único formato universal.']];selectedField=i;if(jump)beat=Math.max(beat,i+1);document.querySelectorAll('.anatomy-row').forEach((e,n)=>e.classList.toggle('highlight',n===i));document.getElementById('fieldExplain').innerHTML=`<h2>${data[i][0]} ✦</h2><p>${data[i][1]}</p><div class="chip">✦ Campo ${i+1} de 4</div>`;if(jump)render()}
+function resetSelected(){document.querySelectorAll('.block-card.selected').forEach(x=>x.classList.remove('selected'));document.querySelectorAll('.hash-node.active').forEach(x=>x.classList.remove('active'));selectedTx=-1;clearField();fbKey=-1;(()=>{const sc=document.getElementById('sigScene');sc.classList.remove('broken');sc.querySelector('.ts').textContent='1730150400';document.getElementById('sigBtn').textContent='⚡ Alterar timestamp'})();compared=-1;document.querySelectorAll('.compare-card').forEach(x=>x.classList.remove('active'));document.getElementById('compareDetail').textContent='Pulsa una tarjeta para descubrir qué tipo de acuerdo representa.';netKey='';tamper(false);agreed=false;document.getElementById('scpScene').classList.remove('agreed');document.getElementById('scpStatus').textContent='';document.getElementById('agreeBtn').textContent='✦ Simular acuerdo';selectedTx=-1;merkle(-1)}
+const FE0='<h2>UN BLOQUE ✦</h2><p>Un encabezado que enlaza y valida, y debajo las transacciones.</p><div class="chip">↗ Usa → para recorrer cada campo</div>';function clearField(){selectedField=-1;document.querySelectorAll('.gline').forEach(x=>x.classList.remove('highlight'));document.getElementById('fieldExplain').innerHTML=FE0}function field(i,jump=true){const data=[['HASH DEL ANTERIOR','La huella criptográfica vincula este bloque con su predecesor.'],['MARCA TEMPORAL','Registra una referencia temporal según las reglas de la red.'],['RAÍZ MERKLE','Resume criptográficamente las transacciones y permite pruebas de inclusión.'],['VALIDACIÓN','Las firmas, pruebas o metadatos dependen del protocolo; no hay un único formato universal.']];selectedField=i;if(jump)beat=Math.max(beat,i+1);document.querySelectorAll('.gline').forEach((e,n)=>e.classList.toggle('highlight',n===i));document.getElementById('fieldExplain').innerHTML=`<h2>${data[i][0]} ✦</h2><p>${data[i][1]}</p><div class="chip">✦ Campo ${i+1} de 4</div>`;if(jump)render()}
 function merkle(i){selectedTx=i;document.querySelectorAll('.hash-node.tx').forEach((x,n)=>x.classList.toggle('active',n===i));document.querySelectorAll('.merkle-svg line').forEach(x=>x.classList.remove('glow'));if(i>=0){let names=[['a-ab','ab-r'],['b-ab','ab-r'],['c-cd','cd-r'],['d-cd','cd-r']][i];names.forEach(name=>document.querySelector(`[data-edge="${name}"]`).classList.add('glow'));document.getElementById('merkleText').innerHTML=`<b>TX ${String(i+1).padStart(2,'0')} verificada ✓</b><br>Solo necesitas los hashes hermanos del camino hasta una raíz confiable.`;}else{document.getElementById('merkleText').textContent='Selecciona una transacción para iluminar su ruta hacia la raíz.'}}
 function tamper(on){tampered=on;const blocks=[...document.querySelectorAll('.tamper-block')];blocks.forEach((x,i)=>{x.classList.toggle('tampered',on&&i===1);x.classList.toggle('invalid',on&&i>1)});document.querySelectorAll('.tamper-arrow').forEach((x,i)=>x.classList.toggle('invalid',on&&i>=1));document.querySelector('.mutable-hash').textContent=on?'hash: f0ff (¡nuevo!)':'hash: 9c1d';document.getElementById('tamperAlert').textContent=on?'⚠ Hash anterior incompatible: ¡cadena inconsistente!':'La cadena está íntegra ✓';document.getElementById('tamperAlert').style.color=on?'#ff9ea7':'#a3fbc7';document.getElementById('tamperBtn').textContent=on?'↺ Restaurar cadena':'⚡ Alterar bloque 02'}
 function compare(i,jump=true){const data=[['BITCOIN · PROOF OF WORK','La seguridad depende del trabajo computacional acumulado; el 51 % se refiere al poder de hash, NO a contar nodos.'],['ETHEREUM · PROOF OF STAKE','Validadores con ETH en stake. Slots de 12 segundos; la finalidad ocurre mediante votos y checkpoints, no en cada slot.'],['STELLAR · SCP','Los nodos configuran quórums de confianza superpuestos. Stellar suele cerrar acuerdos aproximadamente cada 5 segundos.']];compared=i;document.querySelectorAll('.compare-card').forEach((x,n)=>x.classList.toggle('active',n===i));document.getElementById('compareDetail').innerHTML=`<b>${data[i][0]}:</b> ${data[i][1]}`;if(jump){beat=Math.max(beat,i===2?2:i===1?2:1);render()}}
 function agree(on){agreed=on;document.getElementById('scpScene').classList.toggle('agreed',on);document.getElementById('scpStatus').textContent=on?'✓ Acuerdo ilustrativo alcanzado entre quórums superpuestos':' ';document.getElementById('agreeBtn').textContent=on?'↺ Reiniciar simulación':'✦ Simular acuerdo'}
-function sync(){synced=!synced;document.getElementById('networkScene').classList.toggle('synchronized',synced);document.querySelectorAll('.node .status').forEach(x=>x.textContent=synced?'✓ validado':'historial');document.getElementById('syncBtn').textContent=synced?'↺ Restablecer nodos':'✦ Sincronizar red';if(synced){beat=Math.max(beat,2);render()}}
+function netPlay(force){const b=slide===2?beat:-1,key=String(b);if(key===netKey&&!force)return;netKey=key;netTimers.forEach(clearTimeout);netTimers=[];
+const net=document.getElementById('networkScene'),nodes=[...net.querySelectorAll('.node')],pips=[...document.querySelectorAll('#quorum .pips i')],q=document.getElementById('quorumText'),at=(ms,f)=>netTimers.push(setTimeout(f,ms)),st=(n,t)=>n.querySelector('.status').textContent=t;
+net.classList.remove('proposed','settled','committed');void net.offsetWidth;nodes.forEach(n=>{n.classList.remove('voted');st(n,'copia idéntica')});pips.forEach(p=>p.classList.remove('on'));q.textContent='Votos: 0 / 5';
+if(b<1)return;net.classList.add('proposed');nodes.forEach((n,i)=>st(n,i?'recibe bloque 04':'propone bloque 04'));q.textContent='Bloque 04 propuesto · esperando votos';
+if(b<2)return;
+if(force)at(1800,()=>net.classList.add('settled'));else net.classList.add('settled');
+const start=force?2000:400;nodes.forEach((n,i)=>at(start+i*650,()=>{n.classList.add('voted');st(n,'✓ validó bloque 04');pips[i].classList.add('on');q.textContent=i<2?'Votos: '+(i+1)+' / 5':i<4?'Mayoría alcanzada ✓ · '+(i+1)+' / 5':'5 / 5 · bloque 04 confirmado en todas las copias';if(i===2)net.classList.add('committed')}))}
 slides[1].querySelectorAll('[data-selectblock]').forEach(x=>x.addEventListener('click',()=>{slides[1].querySelectorAll('.block-card').forEach(x=>x.classList.remove('selected'));x.classList.add('selected');toast(`Bloque ${Number(x.dataset.selectblock)+1} seleccionado`)}));
 document.querySelectorAll('[data-field]').forEach(x=>x.addEventListener('click',()=>field(Number(x.dataset.field))));document.querySelectorAll('[data-tx]').forEach(x=>x.addEventListener('click',()=>{merkle(Number(x.dataset.tx));beat=Math.max(beat,2);render()}));
-document.querySelectorAll('[data-compare]').forEach(x=>x.addEventListener('click',()=>compare(Number(x.dataset.compare))));document.getElementById('syncBtn').addEventListener('click',sync);document.getElementById('tamperBtn').addEventListener('click',()=>{tamper(!tampered);beat=Math.max(beat,2);render()});document.getElementById('agreeBtn').addEventListener('click',()=>{agree(!agreed);beat=Math.max(beat,2);render()});
+document.querySelectorAll('[data-compare]').forEach(x=>x.addEventListener('click',()=>compare(Number(x.dataset.compare))));document.getElementById('syncBtn').addEventListener('click',()=>{if(slide===2)netPlay(true)});document.querySelectorAll('.replay').forEach(b=>b.addEventListener('click',()=>{const s=slides[slide],c=s.dataset.beat;s.dataset.beat='';void s.offsetWidth;s.dataset.beat=c}));document.getElementById('txBtn').addEventListener('click',()=>{const s=slides[slide],b=s.dataset.beat;s.dataset.beat='';void s.offsetWidth;s.dataset.beat=b});document.getElementById('sigBtn').addEventListener('click',()=>{const sc=document.getElementById('sigScene'),on=sc.classList.toggle('broken');sc.querySelector('.ts').textContent=on?'1730150999':'1730150400';document.getElementById('sigBtn').textContent=on?'↺ Restaurar bloque':'⚡ Alterar timestamp'});document.getElementById('tamperBtn').addEventListener('click',()=>{tamper(!tampered);beat=Math.max(beat,2);render()});document.getElementById('agreeBtn').addEventListener('click',()=>{agree(!agreed);beat=Math.max(beat,2);render()});
 document.getElementById('nextBeat').addEventListener('click',next);document.getElementById('prevBeat').addEventListener('click',previous);document.getElementById('nextSlide').addEventListener('click',()=>goto(slide+1));document.getElementById('prevSlide').addEventListener('click',()=>goto(slide-1));const panel=document.getElementById('notePanel');document.getElementById('notesToggle').addEventListener('click',()=>panel.classList.toggle('open'));document.getElementById('noteClose').addEventListener('click',()=>panel.classList.remove('open'));
 document.getElementById('fullScreen').addEventListener('click',()=>{if(document.fullscreenElement){document.exitFullscreen?.()}else{document.documentElement.requestFullscreen?.()}});
 window.addEventListener('keydown',e=>{return;if(e.target.matches('input,textarea'))return;if(['ArrowRight','ArrowLeft',' ','ArrowDown','ArrowUp'].includes(e.key))e.preventDefault();if(e.key==='ArrowRight'||e.key===' '){if(e.shiftKey)goto(slide+1);else next()}else if(e.key==='ArrowLeft'){if(e.shiftKey)goto(slide-1);else previous()}else if(e.key==='Home')goto(0);else if(e.key==='End')goto(slides.length-1);else if(e.key.toLowerCase()==='n')panel.classList.toggle('open');else if(e.key.toLowerCase()==='f')document.getElementById('fullScreen').click();else if(e.key==='Escape')panel.classList.remove('open');});
 let touchStart=null;deck.addEventListener('touchstart',e=>{touchStart={x:e.touches[0].clientX,y:e.touches[0].clientY}},{passive:true});deck.addEventListener('touchend',e=>{if(!touchStart)return;let dx=e.changedTouches[0].clientX-touchStart.x;if(Math.abs(dx)>75){}touchStart=null},{passive:true});
-const initialSlide=new URLSearchParams(location.search).get('slide');if(initialSlide!==null){slide=Math.max(0,Math.min(slides.length-1,parseInt(initialSlide,10)||0));}window.addEventListener('message',e=>{const d=e.data;if(d&&d.type==='click'){document.querySelectorAll(d.sel)[d.i||0]?.click();return}if(d&&d.type==='step'){if(d.slide!==slide)resetSelected();slide=d.slide;beat=d.beat;render()}});render();})();
+const initialSlide=new URLSearchParams(location.search).get('slide');if(initialSlide!==null){slide=Math.max(0,Math.min(slides.length-1,parseInt(initialSlide,10)||0));}window.addEventListener('message',e=>{const d=e.data;if(d&&d.type==='click'){document.querySelectorAll(d.sel)[d.i||0]?.click();return}if(d&&d.type==='step'){if(d.slide!==slide)resetSelected();slide=d.slide;beat=d.beat;if(d.parent)document.querySelectorAll('.eyebrow b').forEach(b=>{if(/^ACTO/.test(b.textContent))b.textContent='ACTO '+String(d.parent).padStart(2,'0')});render()}});render();})();
 </script></body></html>

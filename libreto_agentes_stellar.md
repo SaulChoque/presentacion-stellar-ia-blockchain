@@ -4,7 +4,7 @@
 **Charla #03 · Duración: 25–30 min · Público: Estudiantes de Informática**
 
 > [!NOTE]
-> **Sincronizado con el deck** (`dist/slides.js`, 18 slides): títulos, subtítulos, visuales y textos de cada slide son los que aparecen en pantalla. La **slide 2 es interactiva** (7 sub-slides, 23 pasos) y se controla también desde `/?notes`. Los ajustes técnicos de contenido están en `dist/revision.md`.
+> **Sincronizado con el deck** (`dist/slides.js`, 18 slides): títulos, subtítulos, visuales y textos de cada slide son los que aparecen en pantalla. Las **slides 2 a 9 son interactivas** (21 sub-slides repartidos, 67 pasos) y se controla también desde `/?notes`. Los ajustes técnicos de contenido están en `dist/revision.md`.
 
 ---
 
@@ -66,34 +66,46 @@
 > No es una explicación básica "para abuelas". El público ya sabe de estructuras de datos,
 > redes y criptografía básica. Habla con esas palabras.
 
-### 🖥️ Slide 2 — Interactiva (7 sub-slides · 23 pasos)
-> **Título de la slide:** "Una estructura que ya conoces."
-> **Subtítulo:** *Una lista enlazada, distribuida y verificable.*
-> **Cómo se maneja:** `→` / `Espacio` avanza un paso; tras el paso 23 pasa a la slide 3. `←` retrocede. En `/?notes` el panel **"Sub-slides de la slide 2 · en vivo"** tiene ◀ ▶, salto directo a cualquier paso y botones de interacción que se replican en la pantalla principal.
+> [!NOTE]
+> **Slides 2 a 9 son interactivas.** Cada slide "padre" contiene sub-slides (`dist/acto2.html`) y siguen el orden del libreto. Con `→` (o el botón → de `/?notes`) avanza un sub-paso; al terminar los pasos de la slide pasa a la siguiente. `←` retrocede. En `/?notes` el panel **"Sub-slides de la slide N · en vivo"** tiene ◀ ▶, salto directo a cualquier paso y botones de interacción que se replican en la pantalla principal. (`Espacio` inicia/pausa el reloj, no avanza.)
 
-| Sub-slide | Pasos | Título en pantalla | Qué ocurre | Interacción desde notas | Tramo del libreto |
-|--|--|--|--|--|--|
-| 1 · Lista enlazada por hashes | 3 | "Cada bloque recuerda al anterior." | Bloque 01 → 02 → 03; aparecen los enlaces y "EL HASH ENLAZA →" | Bloque 1 / 2 / 3 | "…una blockchain es esencialmente una linked list…" |
-| 2 · Una red distribuida | 3 | "No vive en una sola computadora." | Cinco nodos; en el paso 3 la red se sincroniza | Sincronizar red | "La diferencia clave con una lista enlazada normal…" |
-| 3 · Anatomía de un bloque | 5 | "¿Qué guarda un bloque?" | Hash anterior, marca temporal, raíz Merkle, validación | Los 4 campos | "Cada bloque tiene: el hash del bloque anterior…" |
-| 4 · Árbol de Merkle | 3 | "Verifica sin leerlo todo." | Raíz, H(AB), H(CD) y TX 01–04; ruta de la prueba | TX 01 – TX 04 | "¿Por qué el árbol de Merkle?…" |
-| 5 · Inmutabilidad | 3 | "Cambia uno. Se nota en todos." | Bloques 01–04; alterar el 02 invalida 03 y 04 en rojo | Alterar / restaurar bloque 02 | "La inmutabilidad sale de esto…" |
-| 6 · Tres modelos de consenso | 3 | "¿Cómo se ponen de acuerdo?" | Bitcoin PoW · Ethereum PoS · Stellar SCP | Las tres tarjetas | "Ahora, el mecanismo de consenso…" |
-| 7 · SCP y quórums | 3 | "La confianza crea acuerdo." | Quórums superpuestos y simulación de acuerdo | Simular / reiniciar acuerdo | "Stellar usa algo diferente…" |
-
-> **Cuidado en cada sub-slide:**
-> - *Red distribuida:* no digas que siempre vota la mayoría de nodos; cada red tiene su consenso. Los nodos pueden acordar un historial válido sin tener copias idénticas en el mismo instante.
-> - *Anatomía:* es un bloque didáctico, no el formato exacto de Stellar.
-> - *Merkle:* los hashes son ilustrativos, no un SHA-256 en vivo.
-> - *Inmutabilidad:* no afirmes que sea matemáticamente imposible ni que baste el 51 % de los nodos. En Bitcoin el 51 % se refiere al poder de hash.
-> - *Consenso:* no compares segundos de bloque con segundos de finalidad. Los slots de 12 s de Ethereum no son finalidad inmediata.
-> - *SCP:* Stellar cierra acuerdos en unos 5 segundos aproximadamente; la intersección correcta de quórums es lo que da seguridad.
+| Slide padre | Sub-slides | Pasos | Se dice… |
+|--|--|--|--|
+| **2** · Una estructura que ya conoces | 1 Lista enlazada por hashes · 2 Una red distribuida | 3 + 3 = 6 | Intro de linked list + "La diferencia clave…" |
+| **3** · Dentro de un bloque | 3 Anatomía (grimorio) · 4 Muchas transacciones, una huella · 5 Árbol de Merkle · 6 La firma autoriza el bloque | 5 + 3 + 3 + 3 = 14 | "Cada bloque tiene…" + "¿Por qué el árbol de Merkle?" |
+| **4** · Cambias un dato. Rompes la cadena | 7 Inmutabilidad por encadenamiento | 3 | "La inmutabilidad sale de esto…" |
+| **5** · ¿Quién decide qué es válido? | 8 Tres modelos de consenso · 9 SCP y quórums | 3 + 3 = 6 | "Ahora, el mecanismo de consenso…" + "Stellar usa algo diferente…" |
+| **6** · El consenso es un acuerdo | 10 Cada nodo elige en quién confía · 11 Los quórums se superponen · 12 Sin reorganizaciones | 3 + 3 + 3 = 9 | "SCP fue diseñado por David Mazières…" |
+| **7** · Una dirección. Muchos activos | 13 Un par de claves · 14 Una cuenta, muchos activos · 15 El sequence number | 3 + 3 + 3 = 9 | "Las cuentas en Stellar usan criptografía de curva elíptica…" |
+| **8** · Los verbos de Stellar | 16 Los verbos · 17 Una transacción, varias operaciones · 18 Todo o nada | 5 + 3 + 3 = 11 | "Las interacciones con la red se hacen mediante operaciones…" |
+| **9** · Reglas que ejecuta la red | 19 Del código al ledger · 20 Un sandbox dentro de la red · 21 Reglas para agentes | 3 + 3 + 3 = 9 | "Y desde 2023 Stellar tiene Soroban…" |
 
 ---
 
-### 🖥️ Slide 3 — "Dentro de un bloque."
+### 🖥️ Slide 2 — "Una estructura que ya conoces." (6 pasos)
+> **Subtítulo:** *Una lista enlazada, distribuida y verificable.*
+
+| Sub-slide | Título en pantalla | Qué ocurre | Interacción desde notas |
+|--|--|--|--|
+| 1 · Lista enlazada por hashes (3) | "Cada bloque recuerda al anterior." | Bloque 01 → 02 → 03; aparecen los enlaces y "EL HASH ENLAZA →" | Bloque 1 / 2 / 3 |
+| 2 · Una red distribuida (3) | "No vive en una sola computadora." | **1** cinco nodos, cada uno con la misma cadena · **2** un nodo propone el bloque 04 y se difunde · **3** los nodos votan; con la mayoría el bloque 04 queda en todas las copias | ↺ Repetir animación |
+
+> **Cuidado:** no digas que siempre vota la mayoría de nodos; cada red tiene su propio consenso. Los nodos pueden acordar un historial válido sin tener copias exactamente idénticas en el mismo instante.
+
+---
+
+### 🖥️ Slide 3 — "Dentro de un bloque." (14 pasos)
 > **Subtítulo:** *El hash conecta. Las firmas autorizan.*
-> **Visual:** libro de laboratorio con el bloque anotado (modelo conceptual; **no es el header de Stellar**):
+
+| Sub-slide | Título en pantalla | Qué ocurre | Interacción desde notas |
+|--|--|--|--|
+| 3 · Anatomía de un bloque (5) | "Dentro de un bloque." | El grimorio muestra el bloque línea a línea; luego se resalta `prev_hash`, `timestamp`, `merkle_root` y `nonce / validator_sig`, uno por paso | Los 4 campos |
+| 4 · Muchas transacciones, una huella (3) | "Muchas transacciones. Una huella." | Aparece la lista de transacciones, crece a cientos y se resume con un hash en `merkle_root` | ↺ Repetir animación |
+| 5 · Árbol de Merkle (3) | "Verifica sin leerlo todo." | Raíz, H(AB), H(CD) y TX 01–04; se ilumina la ruta de la prueba | TX 01 – TX 04 |
+| 6 · La firma autoriza el bloque (3) | "La firma autoriza el bloque." | El validador firma el encabezado con su clave privada; tres nodos verifican con la clave pública. Alterar el timestamp rompe la firma | ⚡ Alterar / restaurar bloque |
+
+> **Cuidado:** es un bloque didáctico, no el header de Stellar. Los hashes son ilustrativos, no un SHA-256 en vivo.
+> **Referencia del bloque** (modelo conceptual):
 > ```
 > ┌─────────────────────────────────┐
 > │  Block Header                   │
@@ -111,16 +123,28 @@
 
 ---
 
-### 🖥️ Slide 4 — "Cambias un dato. Rompes la cadena."
+### 🖥️ Slide 4 — "Cambias un dato. Rompes la cadena." (3 pasos)
 > **Subtítulo:** *Los hashes detectan cambios; el consenso protege la historia.*
-> **Visual:** tres lápidas encadenadas: **Bloque 01 · Válido** → **Bloque 02 · Dato alterado** (tiembla) → **Bloque 03 · Hash incompatible**.
+
+| Sub-slide | Título en pantalla | Qué ocurre | Interacción desde notas |
+|--|--|--|--|
+| 7 · Inmutabilidad por encadenamiento (3) | "Cambia uno. Se nota en todos." | Bloques 01–04; al alterar el 02 su hash cambia y el 03 y el 04 se marcan en rojo | Alterar / restaurar bloque 02 |
+
 > **Texto:** *"Cambiar un bloque rompe la cadena. La red lo detecta y lo rechaza."*
+> **Cuidado:** no afirmes que sea matemáticamente imposible ni que baste el 51 % de los nodos. En Bitcoin el 51 % se refiere al poder de hash.
 
 ---
 
-### 🖥️ Slide 5 — "¿Quién decide qué es válido?"
+### 🖥️ Slide 5 — "¿Quién decide qué es válido?" (6 pasos)
 > **Subtítulo:** *Distintas redes. Distintos modelos de confianza.*
-> **Visual:** tabla comparativa:
+
+| Sub-slide | Título en pantalla | Qué ocurre | Interacción desde notas |
+|--|--|--|--|
+| 8 · Tres modelos de consenso (3) | "¿Cómo se ponen de acuerdo?" | Bitcoin PoW · Ethereum PoS · Stellar SCP | Las tres tarjetas |
+| 9 · SCP y quórums (3) | "La confianza crea acuerdo." | Quórums superpuestos y simulación de acuerdo | Simular / reiniciar acuerdo |
+
+> **Cuidado:** no compares segundos de bloque con segundos de finalidad (los slots de 12 s de Ethereum no son finalidad inmediata). Stellar cierra acuerdos en unos 5 segundos aproximadamente.
+> **Referencia comparativa:**
 >
 > | Mecanismo | Quién valida | Costo energético | Velocidad |
 > |--|--|--|--|
@@ -166,6 +190,12 @@
 
 ### 🖥️ Slide 6 — "El consenso es un acuerdo."
 > **Subtítulo:** *SCP · Federated Byzantine Agreement*
+
+| Sub-slide | Título en pantalla | Qué ocurre | Interacción desde notas |
+|--|--|--|--|
+| 10 · Cada nodo elige en quién confía (3) | "Cada nodo elige en quién confía." | Nodo A y su quorum slice { B, C }; sus votos le bastan para avanzar | ↺ Repetir animación |
+| 11 · Los quórums se superponen (3) | "Los quórums se superponen." | Dos quórums comparten el nodo C; esa intersección evita historias opuestas | ↺ Repetir animación |
+| 12 · Sin reorganizaciones (3) | "Sin reorganizaciones." | Nominar → votar → cerrar, en unos 5 segundos y sin forks | ↺ Repetir animación |
 > **Visual:** cuatro sigilos **Nodo A · B · C · D** con la nota *"Quórums de confianza superpuestos"*.
 > **Frase de apoyo:** *"No hay un líder. No hay mineros. Solo acuerdo matemático entre nodos de confianza."*
 
@@ -173,6 +203,12 @@
 
 ### 🖥️ Slide 7 — "Una dirección. Muchos activos."
 > **Subtítulo:** *La clave privada permanece fuera del ledger.*
+
+| Sub-slide | Título en pantalla | Qué ocurre | Interacción desde notas |
+|--|--|--|--|
+| 13 · Un par de claves (3) | "Un par de claves." | Clave privada → pública (Ed25519); la privada firma, la pública verifica | ↺ Repetir animación |
+| 14 · Una cuenta, muchos activos (3) | "Una cuenta, muchos activos." | XLM, luego USDC y MY_TOKEN, cada uno tras su `ChangeTrust` | ↺ Repetir animación |
+| 15 · El sequence number (3) | "Ni una vez más." | La transacción se acepta y el número avanza; reenviarla se rechaza | ↺ Repetir animación |
 > **Visual:** libro de notas con la cuenta Stellar:
 > ```
 > Account {
@@ -188,6 +224,12 @@
 
 ### 🖥️ Slide 8 — "Los verbos de Stellar."
 > **Subtítulo:** *Operaciones agrupadas: todo ocurre, o nada ocurre.*
+
+| Sub-slide | Título en pantalla | Qué ocurre | Interacción desde notas |
+|--|--|--|--|
+| 16 · Los verbos de Stellar (5) | "Los verbos de Stellar." | Una tarjeta por paso: `Payment`, `ChangeTrust`, `ManageSellOffer`, `InvokeHostFunction`, `SetOptions` | — |
+| 17 · Una transacción, varias operaciones (3) | "Una transacción, varias operaciones." | Tres `Payment` dentro de una transacción; una sola firma; se envía a la red como paquete | ↺ Repetir animación |
+| 18 · Todo o nada (3) | "Todo o nada." | Las operaciones esperan, todas se aplican (✓) y en el caso de fallo ninguna se aplica (↩ revertida) | ↺ Repetir animación |
 > **Visual:** tabla de operaciones:
 >
 > | Operación | Propósito |
@@ -204,6 +246,14 @@
 
 ### 🖥️ Slide 9 — "Reglas que ejecuta la red."
 > **Subtítulo:** *Soroban · Rust → WebAssembly*
+
+| Sub-slide | Título en pantalla | Qué ocurre | Interacción desde notas |
+|--|--|--|--|
+| 19 · Del código al ledger (3) | "Del código al ledger." | Contrato en Rust → compilado a WebAssembly (`contrato.wasm`) → desplegado en el ledger de Stellar | ↺ Repetir animación |
+| 20 · Un sandbox dentro de la red (3) | "Un sandbox dentro de la red." | El contrato corre en un sandbox WASM; misma entrada, misma salida; tres nodos obtienen el mismo resultado | ↺ Repetir animación |
+| 21 · Reglas para agentes (3) | "Reglas que el agente no puede saltar." | Un pago a un destino aprobado pasa; a uno desconocido el contrato lo rechaza; reglas on-chain auditables | ↺ Repetir animación |
+
+> **Cuidado:** Rust ayuda a evitar errores de memoria y WASM es determinista, pero ninguno garantiza que el contrato no tenga bugs: hay que auditarlo.
 > **Visual:** tres piezas apiladas:
 > ```
 > ┌──────────────────────────────┐
@@ -505,7 +555,7 @@ Tipografías: Creepster (títulos) · Nunito (cuerpo) · IBM Plex Mono (código)
 | Slide | Efecto recomendado |
 |--|--|
 | Apertura | Fade-in lento → ojos de M3GAN se iluminan |
-| Slide 2 (interactiva) | Sub-slides paso a paso: bloques, red que se sincroniza, campos, Merkle, dominó en rojo, consenso y quórums. Transiciones suaves, sin saltos |
+| Slides 2–9 (interactivas) | Sub-slides paso a paso: bloques, red que propone y vota un bloque, campos, Merkle, dominó en rojo, consenso y quórums. Transiciones suaves, sin saltos |
 | Tabla consenso | Columnas aparecen una a una, Stellar al final |
 | Cuenta Stellar | Campos del objeto aparecen línea a línea |
 | Diagrama x402 | Flechas que se mueven de izquierda a derecha, paso a paso |
@@ -519,7 +569,7 @@ Tipografías: Creepster (títulos) · Nunito (cuerpo) · IBM Plex Mono (código)
 | **Three.js + Anime.js** | Escena de papel recortado, personajes y transición de página |
 | **`server.py`** | Sirve `dist/` y mantiene el estado compartido (slide, sub-paso, reloj) |
 | **`/?notes`** | Libreto, reloj, salto de slides y panel de sub-slides en vivo |
-| **`dist/acto2.html`** | Slide 2 interactiva, controlada por el servidor |
+| **`dist/acto2.html`** | Slides 2–9 interactivas, controladas por el servidor |
 
 ### ⏱️ Gestión del tiempo
 

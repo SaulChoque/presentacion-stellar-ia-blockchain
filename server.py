@@ -3,7 +3,7 @@ from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
 from pathlib import Path
 slides=json.loads(Path('dist/slides.js').read_text().removeprefix('const slides = ').rstrip(';'))
 lock=threading.Lock()
-SUBS={1:23}
+SUBS={1:6,2:14,3:3,4:6,5:9,6:9,7:11,8:9}
 state=dict(index=0,sub=0,act=dict(n=0,name=''),total=0,elapsed=0,running=False,auto=False,stamp=time.time()*1000)
 def update():
  now=time.time()*1000
