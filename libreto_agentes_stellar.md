@@ -3,6 +3,9 @@
 **Evento:** AI Agents + Blockchain Halloween · [Luma](https://luma.com/742fo5f8)
 **Charla #03 · Duración: 25–30 min · Público: Estudiantes de Informática**
 
+> [!NOTE]
+> **Sincronizado con el deck** (`dist/slides.js`, 18 slides): títulos, subtítulos, visuales y textos de cada slide son los que aparecen en pantalla. La **slide 2 es interactiva** (7 sub-slides, 23 pasos) y se controla también desde `/?notes`. Los ajustes técnicos de contenido están en `dist/revision.md`.
+
 ---
 
 > [!NOTE]
@@ -32,10 +35,12 @@
 ## 🎬 SECCIÓN 0 — HOOK (2 min)
 
 ### 🖥️ Slide 1
-> **Fondo:** Negro total. Aparece lentamente el texto:
-> *"Ya saben qué es un agente. Ya saben lo que puede hacer."*
-> Pausa → Ojos de M3GAN se encienden.
-> **Texto nuevo:** *"Esta noche le damos billetera."* 🎃
+> **Antetítulo:** "Los agentes han despertado."
+> **Título:** "Esta noche le damos billetera."
+> **Subtítulo:** *"Ya saben qué es un agente. Ahora, ¿cómo maneja dinero?"*
+> **Etiqueta:** UNA HISTORIA DE AGENTES & BLOCKCHAIN
+> **Escena:** muñeca gótica de cabello plateado, luna, calabaza, fantasma-robot con sombrero, billetera de papel y murciélago.
+> **Apoyo:** *"M3GAN puede decidir. Hoy descubrimos cómo puede pagar."*
 
 ---
 
@@ -61,51 +66,67 @@
 > No es una explicación básica "para abuelas". El público ya sabe de estructuras de datos,
 > redes y criptografía básica. Habla con esas palabras.
 
-### 🖥️ Slide 2
-> **Título:** "Blockchain: lo que ya intuyes + lo que falta"
-> **Visual:** Diagrama de una linked list → evoluciona a una cadena de bloques
-> Texto: *"Es una lista enlazada… pero distribuida, firmada criptográficamente e inmutable."*
+### 🖥️ Slide 2 — Interactiva (7 sub-slides · 23 pasos)
+> **Título de la slide:** "Una estructura que ya conoces."
+> **Subtítulo:** *Una lista enlazada, distribuida y verificable.*
+> **Cómo se maneja:** `→` / `Espacio` avanza un paso; tras el paso 23 pasa a la slide 3. `←` retrocede. En `/?notes` el panel **"Sub-slides de la slide 2 · en vivo"** tiene ◀ ▶, salto directo a cualquier paso y botones de interacción que se replican en la pantalla principal.
+
+| Sub-slide | Pasos | Título en pantalla | Qué ocurre | Interacción desde notas | Tramo del libreto |
+|--|--|--|--|--|--|
+| 1 · Lista enlazada por hashes | 3 | "Cada bloque recuerda al anterior." | Bloque 01 → 02 → 03; aparecen los enlaces y "EL HASH ENLAZA →" | Bloque 1 / 2 / 3 | "…una blockchain es esencialmente una linked list…" |
+| 2 · Una red distribuida | 3 | "No vive en una sola computadora." | Cinco nodos; en el paso 3 la red se sincroniza | Sincronizar red | "La diferencia clave con una lista enlazada normal…" |
+| 3 · Anatomía de un bloque | 5 | "¿Qué guarda un bloque?" | Hash anterior, marca temporal, raíz Merkle, validación | Los 4 campos | "Cada bloque tiene: el hash del bloque anterior…" |
+| 4 · Árbol de Merkle | 3 | "Verifica sin leerlo todo." | Raíz, H(AB), H(CD) y TX 01–04; ruta de la prueba | TX 01 – TX 04 | "¿Por qué el árbol de Merkle?…" |
+| 5 · Inmutabilidad | 3 | "Cambia uno. Se nota en todos." | Bloques 01–04; alterar el 02 invalida 03 y 04 en rojo | Alterar / restaurar bloque 02 | "La inmutabilidad sale de esto…" |
+| 6 · Tres modelos de consenso | 3 | "¿Cómo se ponen de acuerdo?" | Bitcoin PoW · Ethereum PoS · Stellar SCP | Las tres tarjetas | "Ahora, el mecanismo de consenso…" |
+| 7 · SCP y quórums | 3 | "La confianza crea acuerdo." | Quórums superpuestos y simulación de acuerdo | Simular / reiniciar acuerdo | "Stellar usa algo diferente…" |
+
+> **Cuidado en cada sub-slide:**
+> - *Red distribuida:* no digas que siempre vota la mayoría de nodos; cada red tiene su consenso. Los nodos pueden acordar un historial válido sin tener copias idénticas en el mismo instante.
+> - *Anatomía:* es un bloque didáctico, no el formato exacto de Stellar.
+> - *Merkle:* los hashes son ilustrativos, no un SHA-256 en vivo.
+> - *Inmutabilidad:* no afirmes que sea matemáticamente imposible ni que baste el 51 % de los nodos. En Bitcoin el 51 % se refiere al poder de hash.
+> - *Consenso:* no compares segundos de bloque con segundos de finalidad. Los slots de 12 s de Ethereum no son finalidad inmediata.
+> - *SCP:* Stellar cierra acuerdos en unos 5 segundos aproximadamente; la intersección correcta de quórums es lo que da seguridad.
 
 ---
 
-### 🖥️ Slide 3
-> **Título:** "Anatomía de un bloque"
-> **Visual:** Bloque con sus campos anotados (estilo diagrama técnico):
+### 🖥️ Slide 3 — "Dentro de un bloque."
+> **Subtítulo:** *El hash conecta. Las firmas autorizan.*
+> **Visual:** libro de laboratorio con el bloque anotado (modelo conceptual; **no es el header de Stellar**):
 > ```
 > ┌─────────────────────────────────┐
 > │  Block Header                   │
-> │  ├─ prev_hash: 0xA3F2...        │
+> │  ├─ prev_hash: 0xA3F2…          │
 > │  ├─ timestamp: 1730150400       │
-> │  ├─ merkle_root: 0x9C1D...      │
+> │  ├─ merkle_root: 0x9C1D…        │
 > │  └─ nonce / validator_sig       │
 > ├─────────────────────────────────┤
 > │  Transactions []                │
-> │  ├─ tx_0: Alice → Bob 10 XLM   │
-> │  ├─ tx_1: Bob → Carol 5 XLM    │
+> │  ├─ tx_0: Alice → Bob 10 XLM    │
+> │  ├─ tx_1: Bob → Carol 5 XLM     │
 > │  └─ ...                         │
 > └─────────────────────────────────┘
 > ```
 
 ---
 
-### 🖥️ Slide 4
-> **Título:** "¿Por qué es inmutable?"
-> **Visual:** Diagrama de 3 bloques encadenados. Se intenta modificar el bloque 2:
-> - El hash del bloque 2 cambia → invalida el bloque 3 → y todos los siguientes
-> - Animación: efecto dominó de bloques "rompiéndose" en rojo
+### 🖥️ Slide 4 — "Cambias un dato. Rompes la cadena."
+> **Subtítulo:** *Los hashes detectan cambios; el consenso protege la historia.*
+> **Visual:** tres lápidas encadenadas: **Bloque 01 · Válido** → **Bloque 02 · Dato alterado** (tiembla) → **Bloque 03 · Hash incompatible**.
 > **Texto:** *"Cambiar un bloque rompe la cadena. La red lo detecta y lo rechaza."*
 
 ---
 
-### 🖥️ Slide 5
-> **Título:** "Consenso: ¿quién decide qué es válido?"
-> **Visual:** Tabla comparativa — solo los mecanismos relevantes
+### 🖥️ Slide 5 — "¿Quién decide qué es válido?"
+> **Subtítulo:** *Distintas redes. Distintos modelos de confianza.*
+> **Visual:** tabla comparativa:
 >
 > | Mecanismo | Quién valida | Costo energético | Velocidad |
 > |--|--|--|--|
-> | **PoW** (Bitcoin) | Mineros (CPU/GPU) | 🔥🔥🔥 Alto | ~10 min |
-> | **PoS** (Ethereum) | Validadores con stake | 🔥 Medio | ~15 seg |
-> | **SCP** (Stellar) | Quórum de nodos de confianza | ✅ Mínimo | **3–5 seg** |
+> | **PoW** · Bitcoin | Mineros (CPU/GPU) | 🔥🔥🔥 Alto | ~10 min |
+> | **PoS** · Ethereum | Validadores con stake | 🔥 Medio | ~15 seg |
+> | **SCP** · Stellar | Quórum de nodos de confianza | ✅ Mínimo | **3–5 seg** |
 
 ---
 
@@ -127,7 +148,7 @@
 
 **"La inmutabilidad sale de esto: si cambias una transacción en el bloque 2, el hash del bloque 2 cambia. Eso invalida el hash en el bloque 3. Y en el 4. Y en el 5. La cadena se rompe. La red detecta la inconsistencia y rechaza esa versión."**
 
-**"Para atacar exitosamente la red, necesitarías controlar más del 50% de los nodos. En redes grandes, eso es prácticamente imposible."**
+**"Para reescribir la historia, un atacante tendría que rehacer los bloques posteriores y lograr que la red acepte esa versión — algo que las reglas de consenso hacen extremadamente costoso. En Bitcoin se habla del 51 %, pero eso mide poder de cómputo, no cantidad de nodos."**
 
 *[señalar slide 5]*
 
@@ -143,83 +164,69 @@
 
 ## ⭐ SECCIÓN 2 — Stellar: arquitectura y por qué importa (8 min)
 
-### 🖥️ Slide 6
-> **Título:** "Stellar Consensus Protocol (SCP)"
-> **Visual:** Diagrama de quórum:
-> ```
->   Nodo A ←──── Nodo B ←──── Nodo C
->     │             │             │
->     └─────────────┼─────────────┘
->               Quórum
->
->  Si A, B y C están de acuerdo → bloque confirmado ✅
->  Si C discrepa → vuelven a votar ♻️
-> ```
-> **Nota:** *"No hay un líder. No hay mineros. Solo acuerdo matemático entre nodos de confianza."*
+### 🖥️ Slide 6 — "El consenso es un acuerdo."
+> **Subtítulo:** *SCP · Federated Byzantine Agreement*
+> **Visual:** cuatro sigilos **Nodo A · B · C · D** con la nota *"Quórums de confianza superpuestos"*.
+> **Frase de apoyo:** *"No hay un líder. No hay mineros. Solo acuerdo matemático entre nodos de confianza."*
 
 ---
 
-### 🖥️ Slide 7
-> **Título:** "Cuentas y Assets en Stellar"
-> **Visual:** Diagrama de cuenta Stellar con sus campos
+### 🖥️ Slide 7 — "Una dirección. Muchos activos."
+> **Subtítulo:** *La clave privada permanece fuera del ledger.*
+> **Visual:** libro de notas con la cuenta Stellar:
 > ```
 > Account {
->   public_key:  GABC...XYZ      ← dirección pública (Ed25519)
->   secret_key:  SABC...XYZ      ← firma transacciones (NUNCA comparte)
->   balances: [
->     { asset: XLM,  amount: 100.5 },
->     { asset: USDC, amount: 50.0  },
->     { asset: "MY_TOKEN:GISSUER", amount: 200 }
->   ]
->   sequence_number: 12345678    ← evita replay attacks
+>   public_key: "GABC…XYZ",
+>   balances: [ XLM, USDC, MY_TOKEN:GISSUER ],
+>   sequence_number: 12345678
 > }
+> // Clave privada: en el firmante, nunca on-chain
+> // Los activos emitidos requieren trustline
 > ```
 
 ---
 
-### 🖥️ Slide 8
-> **Título:** "Operaciones: los verbos de Stellar"
-> **Visual:** Lista de operaciones más comunes con íconos
+### 🖥️ Slide 8 — "Los verbos de Stellar."
+> **Subtítulo:** *Operaciones agrupadas: todo ocurre, o nada ocurre.*
+> **Visual:** tabla de operaciones:
 >
-> | Operación | Qué hace |
+> | Operación | Propósito |
 > |--|--|
-> | `Payment` | Envía XLM o cualquier asset |
-> | `ChangeTrust` | Habilita recibir un asset |
-> | `ManageSellOffer` | Crea orden en el DEX |
-> | `InvokeContractFunction` | Llama a un smart contract (Soroban) |
-> | `SetOptions` | Configura multisig, umbrales |
+> | `Payment` | Enviar un activo |
+> | `ChangeTrust` | Aceptar un activo emitido |
+> | `ManageSellOffer` | Crear una oferta en el DEX |
+> | `InvokeHostFunction` | Invocar un contrato Soroban |
+> | `SetOptions` | Configurar firmas y umbrales |
 >
 > **Nota:** *Varias operaciones pueden agruparse en una sola transacción. Atómicas.*
 
 ---
 
-### 🖥️ Slide 9
-> **Título:** "Soroban: Smart contracts en Stellar"
-> **Visual:** Stack visual:
+### 🖥️ Slide 9 — "Reglas que ejecuta la red."
+> **Subtítulo:** *Soroban · Rust → WebAssembly*
+> **Visual:** tres piezas apiladas:
 > ```
 > ┌──────────────────────────────┐
-> │   Tu contrato  (.wasm)       │  ← Escrito en Rust
+> │   Contrato en Rust           │  ← Tu lógica de negocio
 > ├──────────────────────────────┤
-> │   WebAssembly Runtime        │  ← Sandbox seguro
+> │   WebAssembly                │  ← Ejecución controlada
 > ├──────────────────────────────┤
-> │   Stellar Ledger             │  ← Estado persistente
+> │   Stellar Ledger             │  ← Estado compartido
 > └──────────────────────────────┘
 > ```
 > **Texto:** *"Contratos en Rust → compilados a WASM → ejecutados on-chain. Deterministas, auditables."*
 
 ---
 
-### 🖥️ Slide 10
-> **Título:** "¿Por qué Stellar y no otra blockchain?"
-> **Visual:** Tarjetas de ventajas con números reales
+### 🖥️ Slide 10 — "Diseñado para mover valor."
+> **Subtítulo:** *Pagos programables como parte de tu software.*
+> **Visual:** tres lápidas:
+> - **Segundos** — Cierre de ledger
+> - **100 stroops** — Mínimo por operación clásica\*
+> - **USDC** — Emitido por Circle en Stellar
 >
-> ```
->  ⚡ Finalidad:   3–5 segundos
->  💸 Fee:         0.00001 XLM (~$0.000003 USD)
->  🌐 Throughput:  ~1,000 tx/seg (en producción)
->  💵 USDC nativo: Sin bridges, sin wrapping
->  🏦 Adopción:    MoneyGram, Circle, Banco Central de Ucrania
-> ```
+> *\*Mínimo clásico sin congestión. Soroban añade tarifas por recursos.*
+> **Revisión:** no se muestran cifras de throughput ni de adopción porque no están comprobadas; si las mencionas en voz alta, cita fuente.
 
 ---
 
@@ -269,103 +276,65 @@
 
 ## 🤖 SECCIÓN 3 — Cómo un agente opera en Stellar (9 min)
 
-### 🖥️ Slide 11
-> **Título:** "El problema: los agentes no tienen identidad financiera"
-> **Visual:** M3GAN intentando pagar con tarjeta → rechazada ❌
+### 🖥️ Slide 11 — "El software también necesita pagar."
+> **Subtítulo:** *M3GAN puede razonar. El banco espera una persona.*
+> **Visual:** dos tarjetas contrapuestas:
+> - **Sistema tradicional** — Identidad legal · cuenta bancaria
+> - **Identidad on-chain** — Claves · firma · saldo
 > **Texto:** *"No tienen DNI. No pueden abrir cuenta bancaria. El sistema financiero tradicional no fue diseñado para software autónomo."*
 
 ---
 
-### 🖥️ Slide 12
-> **Título:** "Solución: crear una wallet on-chain en segundos"
-> **Visual:** Snippet de código animado (aparece línea a línea)
+### 🖥️ Slide 12 — "Una wallet comienza con claves."
+> **Subtítulo:** *Generar claves no activa una cuenta: hay que fondearla.*
+> **Visual:** snippet en el grimorio (aparece línea a línea):
 > ```python
-> from stellar_sdk import Keypair, Server, TransactionBuilder, Network
+> from stellar_sdk import Keypair, Server
 >
-> # 1. Generar identidad del agente
-> agent_keypair = Keypair.random()
-> print(f"Agent address: {agent_keypair.public_key}")
-> # → GABC...XYZ
+> agent = Keypair.random()
+> print(agent.public_key)
 >
-> # 2. Fondear la cuenta (mínimo 1 XLM de reserva)
-> #    En testnet: friendbot lo hace gratis
-> #    En mainnet: otro agente o el usuario lo fondea
->
-> # 3. El agente ya puede enviar pagos
+> # Guardar agent.secret fuera del código y del LLM
+> # Fondear en testnet con Friendbot
 > server = Server("https://horizon-testnet.stellar.org")
 > ```
-> **Nota:** *"3 líneas para dar identidad financiera a cualquier proceso de software."*
 
 ---
 
-### 🖥️ Slide 13
-> **Título:** "Flujo de un agente haciendo un micropago"
-> **Visual:** Diagrama de secuencia animado (aparece paso a paso)
-> ```
-> Agente                    Horizon API               Stellar Network
->   │                           │                           │
->   │── build_transaction() ───►│                           │
->   │   (Payment op, 0.001 USDC)│                           │
->   │◄── unsigned_tx ───────────│                           │
->   │                           │                           │
->   │── sign(secret_key) ───────────────────────────────────│
->   │── submit_transaction() ──►│                           │
->   │                           │── broadcast ─────────────►│
->   │                           │                           │── validate
->   │                           │                           │── consensus
->   │◄── 200 OK (3-5 seg) ──────│◄── confirmed ─────────────│
->   │                           │                           │
-> ```
+### 🖥️ Slide 13 — "De la decisión al pago."
+> **Subtítulo:** *La construcción y la firma ocurren en el cliente.*
+> **Visual:** flujo de 4 pasos:
+> 1. **SDK** — Cargar cuenta y construir
+> 2. **Firmante** — Autorizar y firmar localmente
+> 3. **Horizon** — Enviar la transacción
+> 4. **Red Stellar** — Validar, acordar y confirmar
 
 ---
 
-### 🖥️ Slide 14
-> **Título:** "El protocolo x402: internet de máquinas"
-> **Visual:** Diagrama de flujo HTTP animado
-> ```
->   Agente                                   API Server
->     │                                           │
->     │──── GET /premium-data ───────────────────►│
->     │                                           │
->     │◄─── 402 Payment Required ─────────────────│
->     │     { amount: "0.001", asset: "USDC",     │
->     │       address: "GSERVER...",              │
->     │       network: "stellar:mainnet" }        │
->     │                                           │
->     │──── [paga 0.001 USDC en Stellar] ─────────┤
->     │──── GET /premium-data                     │
->     │     Authorization: x402 <tx_hash> ───────►│
->     │                                           │── verifica pago on-chain
->     │◄─── 200 OK + data ────────────────────────│
-> ```
-> **Nota:** *"El código HTTP 402 existió desde 1991. Esperó 30 años para ser usado por máquinas."*
+### 🖥️ Slide 14 — "HTTP 402: una API que cobra."
+> **Subtítulo:** *x402 · flujo conceptual, requiere integración compatible.*
+> **Visual:** flujo de 4 pasos:
+> 1. **GET /recurso** — El agente solicita datos
+> 2. **402 · PAYMENT-REQUIRED** — El servidor indica condiciones
+> 3. **PAYMENT-SIGNATURE** — El cliente firma y reintenta
+> 4. **200 · Recurso** — Verificación y liquidación del pago
+> **Nota:** *"El código HTTP 402 existe desde los primeros estándares de HTTP. Esperó décadas para que las máquinas lo usaran."*
 
 ---
 
-### 🖥️ Slide 15
-> **Título:** "Contratos como reglas inmutables del agente"
-> **Visual:** Dos columnas
+### 🖥️ Slide 15 — "Autonomía con límites."
+> **Subtítulo:** *Un contrato puede hacer cumplir un presupuesto.*
+> **Visual:** pseudocódigo (no es un contrato desplegable):
+> ```
+> require_auth(agente)
+> assert(amount > 0)
+> assert(spent_today + amount <= daily_limit)
+> update_spent_today(amount)
+> transfer(to, amount)
 >
-> **Sin Soroban:**
+> // Custodia, permisos y upgrades también importan
 > ```
-> Usuario confía en que
-> el agente hace lo correcto.
-> Caja negra. Sin auditoría.
-> ```
->
-> **Con Soroban:**
-> ```rust
-> // El agente SOLO puede gastar
-> // hasta este límite por día
-> #[contract]
-> pub fn transfer(env: Env, to: Address, amount: i128) {
->     let daily_limit: i128 = 100_000_000; // 10 USDC
->     let spent_today = env.storage().get_spent_today();
->     assert!(spent_today + amount <= daily_limit);
->     // ... ejecuta el pago
-> }
-> ```
-> **Texto:** *"Las reglas del agente son código on-chain. Verificables. Inmutables. Sin excepciones."*
+> **Texto:** *"Las reglas del agente pueden ser código on-chain. Verificables, sin depender de una promesa."*
 
 ---
 
@@ -401,11 +370,11 @@
 
 **"Cuando un agente quiere acceder a un recurso de pago en internet, hace un GET normal. El servidor responde con código 402 — Payment Required — y en el body incluye un objeto con: cuánto cobrar, en qué asset, a qué dirección, en qué red."**
 
-**"El agente lee eso, ejecuta el pago en Stellar, incluye el hash de la transacción en el header de la siguiente request, y el servidor verifica on-chain que el pago llegó. Si llegó, entrega el recurso."**
+**"El agente lee eso, firma y ejecuta el pago, y reintenta la solicitud con la prueba de pago en el header (en x402 v2: `PAYMENT-SIGNATURE`). El servidor verifica el pago y, si es válido, entrega el recurso."**
 
 **"Todo esto ocurre en segundos, sin humanos, sin contratos firmados, sin subscripciones mensuales. Las máquinas se están pagando entre sí en tiempo real."**
 
-**"El código 402 existió en la especificación HTTP desde 1991. Tim Berners-Lee lo incluyó pensando que eventualmente se usaría para micropagos en la web. Tardó 30 años en materializarse, y la herramienta que lo hizo posible fue Stellar."**
+**"El código 402 existe en HTTP desde sus primeros estándares, pensado para pagos que casi nadie usó en la web. x402 lo retoma para que las máquinas se paguen entre sí — hace falta que el servidor y el cliente soporten el protocolo."**
 
 *[señalar slide 15]*
 
@@ -421,35 +390,33 @@
 
 ## 🌍 SECCIÓN 4 — Demo / Casos Reales (3 min)
 
-### 🖥️ Slide 16
-> **Título:** "Casos reales operando hoy"
-> **Visual:** Tres tarjetas
+### 🖥️ Slide 16 — "Del ecosistema a tu primer experimento."
+> **Subtítulo:** *Distinguir productos existentes de ideas que puedes construir.*
+> **Visual:** tres lápidas
 
-**🏦 Remesas sin intermediarios**
-> MoneyGram + Stellar: personas en América Latina y África reciben remesas en segundos, sin cuenta bancaria. El agente de conversión opera automáticamente en el DEX de Stellar.
+**🏦 MoneyGram**
+> Entrada y salida de efectivo con USDC en Stellar.
 
-**🤖 Trading autónomo 24/7**
-> Bots operando en el Stellar DEX, ejecutando arbitraje y market-making. Micropagos de fees por cada operación — económicamente viable solo por los costos de Stellar.
+**📈 DEX nativo**
+> Órdenes y automatización: un agente puede crear y cancelar ofertas por código.
 
-**🔐 KYC descentralizado con agentes**
-> Agentes de verificación de identidad usando el protocolo SEP-30 de Stellar. Verifican sin guardar datos en servidores centrales — los datos viven en la blockchain, controlados por el usuario.
+**🧪 Testnet**
+> Explora una transacción sin fondos reales: crea la cuenta, fóndea con Friendbot y míralo en el explorador.
 
 ---
 
-### 🖥️ Slide 17
-> **Título:** "El stack completo de un agente en Stellar"
-> **Visual:** Diagrama de capas (de arriba a abajo)
+### 🖥️ Slide 17 — "El stack completo."
+> **Subtítulo:** *Cada capa tiene una responsabilidad.*
+> **Visual:** diagrama de capas (de arriba a abajo)
 > ```
 > ┌─────────────────────────────────────────┐
-> │   LLM / Lógica del Agente               │  ← Claude, GPT, Gemini...
+> │   LLM / lógica del agente               │  ← Decide dentro de una política
 > ├─────────────────────────────────────────┤
-> │   Stellar AI Toolkit / SDK              │  ← stellar-sdk, x402-client
+> │   SDK + firmante                        │  ← Construye, valida y autoriza
 > ├─────────────────────────────────────────┤
-> │   Horizon API                           │  ← Gateway a la red
+> │   Horizon / Stellar RPC                 │  ← Acceso a la red según operación
 > ├─────────────────────────────────────────┤
-> │   Stellar Network (SCP)                 │  ← Consenso, ledger
-> ├─────────────────────────────────────────┤
-> │   Soroban Contracts                     │  ← Reglas inmutables
+> │   Stellar + Soroban                     │  ← Consenso, estado y contratos
 > └─────────────────────────────────────────┘
 > ```
 
@@ -461,11 +428,11 @@
 
 *[tarjeta por tarjeta]*
 
-**"MoneyGram usa Stellar en producción para remesas. El proceso involucra agentes de conversión que operan automáticamente en el DEX de Stellar — convirtiendo USD a XLM, ejecutando el pago, convirtiendo del otro lado. El usuario solo ve que su familiar recibió dinero en minutos."**
+**"MoneyGram conecta efectivo y USDC en Stellar: el usuario puede entrar y salir de dólares digitales sin tener que entender la blockchain."**
 
-**"En el DEX de Stellar hay bots de trading operando continuamente. Market makers, arbitrajistas. En Ethereum el gas haría eso prohibitivo. En Stellar los fees son tan bajos que el modelo funciona con márgenes de décimas de centavo."**
+**"El DEX nativo de Stellar permite crear y cancelar órdenes por código. Eso abre la puerta a agentes que automatizan estrategias, y los fees mínimos hacen viable operar con montos pequeños."**
 
-**"Y hay proyectos usando el protocolo SEP-30 de Stellar para verificación de identidad descentralizada. Un agente puede verificar que eres quien dices ser sin que tus datos toquen un servidor central hackeable."**
+**"Y para la demo, lo más honesto es Testnet: creas una cuenta, la fondeas con Friendbot y muestras la transacción en el explorador. Sin fondos reales, con todo el flujo visible."**
 
 *[señalar slide 17]*
 
@@ -479,17 +446,14 @@
 
 ## 🎃 SECCIÓN 5 — CIERRE (2 min)
 
-### 🖥️ Slide 18
-> **Fondo:** Negro. M3GAN con su cara iluminada, pero ahora tiene debajo un QR de Stellar docs.
-> **Texto:**
-> *"M3GAN ahora tiene wallet."*
-> *"¿Qué vas a construir vos?"* 🎃
->
-> **Links:**
-> - 🌐 `stellar.org/developers`
-> - 📖 `docs.stellar.org`
-> - ⚡ `x402.org`
-> - 🧰 `github.com/stellar/stellar-ai-toolkit`
+### 🖥️ Slide 18 — "M3GAN ahora tiene wallet."
+> **Subtítulo:** *"¿Qué vas a construir vos?"* 🎃
+> **Fondo:** negro, con la escena de cierre (muñeca, luna y calabaza).
+> **Links en pantalla:**
+> - 🌐 `developers.stellar.org`
+> - 🔎 `stellar.expert/explorer/testnet`
+> - 🧪 `laboratory.stellar.org`
+> **Pie:** *Stellar es una marca de Stellar Development Foundation. Presentación comunitaria independiente.*
 
 ---
 
@@ -524,14 +488,16 @@
 ### 🎨 Estética Visual
 
 ```
-PALETA DE COLORES
+PALETA DEL DECK
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Fondo:           #0A0A0A   Negro profundo
-  Acento Stellar:  #7B61FF   Violeta
-  Halloween:       #FF6B00   Naranja calabaza
-  Código:          #00E8D0   Cyan (ojos de M3GAN)
-  Texto:           #FFFFFF
-  Texto sec.:      #AAAAAA
+  Fondo:           #0F0F0F   Negro
+  Amarillo:        #FDDA24   Acento Stellar / títulos clave
+  Blanco:          #F6F7F8   Texto
+  Lavanda:         #B7ACE8   Vestido, lápidas, luna
+  Teal:            #00A7B5   Detalles y selección
+  Azul:            #002E5D   Lazo y colinas
+  Papel:           #D6D2C4   Tarjetas y tablas
+Tipografías: Creepster (títulos) · Nunito (cuerpo) · IBM Plex Mono (código)
 ```
 
 ### 🎞️ Animaciones por sección
@@ -539,21 +505,21 @@ PALETA DE COLORES
 | Slide | Efecto recomendado |
 |--|--|
 | Apertura | Fade-in lento → ojos de M3GAN se iluminan |
-| Bloques (Sección 1) | Diagrama construyéndose bloque a bloque |
+| Slide 2 (interactiva) | Sub-slides paso a paso: bloques, red que se sincroniza, campos, Merkle, dominó en rojo, consenso y quórums. Transiciones suaves, sin saltos |
 | Tabla consenso | Columnas aparecen una a una, Stellar al final |
 | Cuenta Stellar | Campos del objeto aparecen línea a línea |
 | Diagrama x402 | Flechas que se mueven de izquierda a derecha, paso a paso |
 | Stack completo | Capas apilándose de abajo hacia arriba |
 | Cierre | Zoom suave a la cara de M3GAN + QR |
 
-### 🛠️ Herramientas sugeridas
+### 🛠️ Herramientas (las que usa este deck)
 
-| Herramienta | Por qué |
+| Herramienta | Para qué |
 |--|--|
-| **Pitch.com** | Animaciones fluidas, tema oscuro, colaborativo |
-| **Canva** | Templates oscuros, rápido de armar |
-| **Gamma.app** | Genera slides desde este libreto con IA |
-| **Excalidraw** | Para los diagramas técnicos (exporta como imagen) |
+| **Three.js + Anime.js** | Escena de papel recortado, personajes y transición de página |
+| **`server.py`** | Sirve `dist/` y mantiene el estado compartido (slide, sub-paso, reloj) |
+| **`/?notes`** | Libreto, reloj, salto de slides y panel de sub-slides en vivo |
+| **`dist/acto2.html`** | Slide 2 interactiva, controlada por el servidor |
 
 ### ⏱️ Gestión del tiempo
 
@@ -599,4 +565,4 @@ PALETA DE COLORES
 
 ---
 
-*Libreto v2 · Evento AI Agents + Blockchain Halloween 🎃 · Octubre 2026*
+*Libreto v2.1 · sincronizado con el deck de 18 slides · Evento AI Agents + Blockchain Halloween 🎃 · Octubre 2026*
